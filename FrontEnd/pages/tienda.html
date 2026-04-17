@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda</title>
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="icon" type="image/png" href="faviinco.png" />
+    <link rel="stylesheet" href="../styles/1st.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body class="body-tienda">
+    <header class="header-principal">
+      <div class="header-logo">
+        <img
+          src="Imagenes/85e91e0a-7280-4aea-bb42-c9836994955c.png"
+          alt="CoreTech Logo"
+          class="logo-imagen"
+        />
+        <span class="logo-texto">CORETECH</span>
+      </div>
+      <nav class="menu-navegacion">
+        <a href="index.html" class="menu-enlace">Inicio</a>
+        <a href="tienda.html" class="menu-enlace">Tienda</a>
+        <a href="about-us.html" class="menu-enlace">Sobre nosotros</a>
+        <a href="contacto.html" class="menu-enlace">Contacto</a>
+      </nav>
+      <div class="header-iconos" data-aos="fade-left" data-aos-duration="1000">
+        
+        <div class="user-menu">
+          <button id="userBtn" class="user-btn" type="button">
+            <i class="fa-solid fa-user"></i>
+          </button>
+
+          <div id="userCard" class="user-card oculto">
+            <p>Cargando...</p>
+          </div>
+        </div>
+        
+        <a href="">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </a>
+
+        <a href="tienda.html">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+      </div>
+    </header>
+    <main>
+      <section class="tienda-seccion-1">
+        <div class="tienda-contenedor-1">
+          <h1>Encuentra tu proximo Smarthphone</h1>
+          <p>Los mejores dispositivos Samsung, Apple y Xiaomi</p>
+          <img
+            src="Imagenes/f82708e6-22da-44f0-8607-fb64c1353fbf.png"
+            alt="Smarthphone"
+          />
+        </div>
+        <section class="tienda-seccion-2">
+          <div class="tienda-contenedor-2">
+            <div class="filtros-header">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <h3>Filtros</h3>
+            </div>
+
+            <div class="filtros-bloque">
+              <div class="filtros-titulo">
+                <h4>Marca</h4>
+                <i class="fa-solid fa-angle-up"></i>
+              </div>
+
+              <form class="filtro-marcas">
+                <label class="opcion">
+                  <input type="checkbox" name="marca" value="Samsung" />
+                  <span class="cuadro"></span>
+                  <span class="texto-opcion">Samsung</span>
+                </label>
+
+                <label class="opcion">
+                  <input type="checkbox" name="marca" value="Apple" />
+                  <span class="cuadro"></span>
+                  <span class="texto-opcion">Apple</span>
+                </label>
+
+                <label class="opcion">
+                  <input type="checkbox" name="marca" value="Xiaomi" />
+                  <span class="cuadro"></span>
+                  <span class="texto-opcion">Xiaomi</span>
+                </label>
+
+                <label class="opcion">
+                  <input type="checkbox" name="marca" value="Google Pixel" />
+                  <span class="cuadro"></span>
+                  <span class="texto-opcion">Google Pixel</span>
+                </label>
+              </form>
+            </div>
+
+            <div class="filtros-bloque">
+              <div class="filtros-titulo">
+                <h4>Precio</h4>
+                <i class="fa-solid fa-angle-down"></i>
+              </div>
+
+              <form class="filtro-marcas">
+                <label class="opcion">
+                  <input type="checkbox" name="precio" value="1000-20000" />
+                  <span class="cuadro"></span>
+                  <span class="texto-opcion">RD$1,000 - $20,000</span>
+                </label>
+
+                <label class="opcion">
+                  <input type="checkbox" name="precio" value="20000-40000" />
+                  <span class="cuadro"></span>
+                  <span class="texto-opcion">RD$2,000 - $40,000</span>
+                </label>
+
+                <label class="opcion">
+                  <input type="checkbox" name="precio" value="40000+" />
+                  <span class="cuadro"></span>
+                  <span class="texto-opcion">RD$40,00+</span>
+                </label>
+              </form>
+            </div>
+
+            <div class="filtros-bloque">
+              <div class="filtros-titulo">
+                <h4>Almacenamiento</h4>
+                <i class="fa-solid fa-angle-down"></i>
+              </div>
+
+              <form class="filtro-marcas">
+                <label class="opcion">
+                  <input type="checkbox" name="almacenamiento" value="128GB" />
+                  <span class="cuadro"></span>
+                  <span class="texto-opcion">128GB</span>
+                </label>
+
+                <label class="opcion">
+                  <input type="checkbox" name="almacenamiento" value="256GB" />
+                  <span class="cuadro"></span>
+                  <span class="texto-opcion">256GB</span>
+                </label>
+
+                <label class="opcion">
+                  <input type="checkbox" name="almacenamiento" value="1TB" />
+                  <span class="cuadro"></span>
+                  <span class="texto-opcion">1TB</span>
+                </label>
+              </form>
+            </div>
+          </div>
+        </section>
+        <section class="tienda-seccion-3">
+          <div class="tienda-subcontenedor-3">
+            <div class="tienda-buscador">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input
+                name="search"
+                type="text"
+                placeholder="Buscar productos..."
+              />
+            </div>
+            <div class="tienda-ordenar">
+              <label for="ordenar">Ordenar por:</label>
+              <select name="ordenar" id="ordenar">
+                <option value="precio-asc">Precio: Menor a Mayor</option>
+                <option value="precio-desc">Precio: Mayor a Menor</option>
+                <option value="nuevo">Nuevos Lanzamientos</option>
+              </select>
+            </div>
+          </div>
+          <div class="barra-categorias">
+            <div class="categorias">
+              <button class="categoria" data-categoria="all">Todo</button>
+              <button class="categoria" data-categoria="Samsung">
+                Samsung
+              </button>
+              <button class="categoria" data-categoria="Apple">Apple</button>
+              <button class="categoria" data-categoria="Xiaomi">Xiaomi</button>
+              <button class="categoria" data-categoria="Accesorios">
+                Accesorios
+              </button>
+            </div>
+
+            <p class="resultado-texto"></p>
+          </div>
+          <div class="tienda-subcontenedor-4" id="productos-contenedor"><p id="mensaje-productos">Error al cargar los productos.</p></div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+    <footer class="footer-principal">
+      <div class="footer-contenido">
+        <div class="footer-marca">
+          <h3>CoreTech</h3>
+          <p>
+            Tu destino definitivo para tecnología de vanguardia y dispositivos
+            innovadores.
+          </p>
+
+          <ul class="footer-contacto">
+            <li>📞 +1 (829) 622-0359</li>
+            <li>✉️ soporte@coretech.com</li>
+            <li>📍 Empanadas Mañon</li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4>Tienda</h4>
+          <a href="#">smartphones</a>
+          <a href="#">Tabletas</a>
+          <a href="#">Accesorios</a>
+          <a href="#">Smartwatches</a>
+          <a href="#">Ofertas</a>
+        </div>
+
+        <div class="footer-links">
+          <h4>Soporte</h4>
+          <a href="#">Centro de Ayuda</a>
+          <a href="#">Servicio Técnico</a>
+          <a href="#">Garantía</a>
+          <a href="#">Seguir orden</a>
+        </div>
+
+        <div class="footer-links">
+          <h4>Compañia</h4>
+          <a href="about-us.html">Nosotros</a>
+          <a href="#">Trabaja con nosotros</a>
+          <a href="#">Blog</a>
+          <a href="#">Programas afiliados</a>
+        </div>
+      </div>
+
+      <div class="footer-inferior">
+        <p>© 2026 CoreTech. All rights reserved.</p>
+
+        <div class="footer-social">
+          <span>🌐</span>
+          <span>🐦</span>
+          <span>📸</span>
+          <span>▶️</span>
+        </div>
+
+        <div class="footer-legal">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="../js/general.js"></script>
+  <script src="../js/tienda.js"></script>
+  <script>
+    AOS.init({
+      once: true,
+    });
+  </script>
+</html>

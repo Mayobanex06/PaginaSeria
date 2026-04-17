@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro</title>
+    <link rel="icon" type="image/png" href="faviinco.png" />
+    <link rel="stylesheet" href="../styles/1st.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  </head>
+  <body class="body-login">
+    <header class="header-principal">
+      <div class="header-logo">
+        <img
+          src="Imagenes/85e91e0a-7280-4aea-bb42-c9836994955c.png"
+          alt="CoreTech Logo"
+          class="logo-imagen"
+        />
+        <span class="logo-texto">CORETECH</span>
+      </div>
+      <nav class="menu-navegacion">
+        <a href="FrontEnd/index.html" class="menu-enlace">Inicio</a>
+        <a href="FrontEnd/tienda.html" class="menu-enlace">Tienda</a>
+        <a href="FrontEnd/about-us.html" class="menu-enlace">Sobre nosotros</a>
+        <a href="FrontEnd/contacto.html" class="menu-enlace">Contacto</a>
+      </nav>
+      <div class="header-iconos" data-aos="fade-left" data-aos-duration="1000">
+        <a href="">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </a>
+
+        <a href="login.html">
+          <i class="fa-solid fa-user"></i>
+        </a>
+
+        <a href="tienda.html">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+      </div>
+    </header>
+    <main class="login">
+      <section
+        class="login-contenedor"
+        data-aos="fade-down"
+        data-aos-duration="1000"
+      >
+        <header class="login-header">
+          <div class="login-logo">CORETECH</div>
+          <h1 class="login-titulo">Crear cuenta</h1>
+          <p class="login-subtitulo">
+            Regístrate para gestionar tu cuenta y compras.
+          </p>
+        </header>
+
+        <form
+          class="login-form"
+          action="http://localhost:3000/api/register"
+          method="post"
+          id="formRegister"
+        >
+          <label class="campo">
+            <span class="campo-label">Nombre de Usuario</span>
+            <input
+              name="nombre"
+              class="campo-input"
+              type="text"
+              placeholder="Nombre de usuario"
+              required
+            />
+          </label>
+
+          <label class="campo">
+            <span class="campo-label">Correo</span>
+            <input
+              name="email"
+              class="campo-input"
+              type="email"
+              placeholder="tucorreo@ejemplo.com"
+              required
+            />
+          </label>
+
+          <label class="campo">
+            <span class="campo-label">Contraseña</span>
+            <input
+              name="password"
+              class="campo-input"
+              type="password"
+              placeholder="••••••••"
+              required
+            />
+          </label>
+
+          <div class="login-opciones">
+            <label class="check">
+              <input type="checkbox" />
+              <span>Recordarme</span>
+            </label>
+
+            <a class="link" href="#">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          <button class="btn btn-principal" type="submit">Crear cuenta</button>
+          <button
+            class="btn btn-secundario"
+            type="button"
+            onclick="window.location.href = 'login.html'"
+          >
+            ¿Ya tienes una cuenta? Inicia sesión
+          </button>
+        </form>
+        <p id="mensaje"></p>
+      </section>
+      <div>
+        <p class="login-beneficios">
+          <span data-aos="fade-right" data-aos-duration="1000"
+            ><i class="fa-solid fa-truck"></i> Envíos rápidos
+          </span>
+          <span data-aos="fade-left" data-aos-duration="1000"
+            ><i class="fa-solid fa-shield-alt"></i> Pagos seguros</span
+          >
+        </p>
+      </div>
+    </main>
+  </body>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/general.js"></script>
+  <script>
+    AOS.init({
+      once: true,
+    });
+  </script>
+</html>
