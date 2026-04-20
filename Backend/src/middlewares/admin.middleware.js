@@ -3,7 +3,7 @@ const pool = require("../config/db");
 async function adminMiddleware(req, res, next) {
   try {
     const [rows] = await pool.query(
-      "SELECT rol FROM usuarios WHERE id_usuarios = ?",
+      "SELECT rol FROM usuarios WHERE id_usuario = ?",
       [req.userId],
     );
 

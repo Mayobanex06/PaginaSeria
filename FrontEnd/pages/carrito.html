@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carrito | CoreTech</title>
+    <link rel="icon" type="image/png" href="Imagenes/faviinco.png" />
+    <link rel="stylesheet" href="../styles/carrito.css" />
+    <link rel="stylesheet" href="../styles/general.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body class="body-carrito">
+    <header class="header-principal">
+      <div class="header-logo">
+        <img
+          src="../assets/Imagenes/85e91e0a-7280-4aea-bb42-c9836994955c.png"
+          alt="CoreTech Logo"
+          class="logo-imagen"
+        />
+        <span class="logo-texto">CORETECH</span>
+      </div>
+
+      <nav class="menu-navegacion">
+        <a href="index.html" class="menu-enlace">Inicio</a>
+        <a href="tienda.html" class="menu-enlace">Tienda</a>
+        <a href="about-us.html" class="menu-enlace">Sobre nosotros</a>
+        <a href="#" class="menu-enlace">Contacto</a>
+      </nav>
+
+      <div class="header-iconos">
+        <div class="user-menu">
+          <button id="userBtn" class="user-btn" type="button">
+            <i class="fa-solid fa-user"></i>
+          </button>
+
+          <div id="userCard" class="user-card oculto">
+            <p>Cargando...</p>
+          </div>
+        </div>
+
+        <a href="#">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </a>
+
+        <a href="carrito.html" aria-label="Ir al carrito">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+      </div>
+    </header>
+
+    <main class="carrito-main">
+      <section class="carrito-hero">
+        <div>
+          <p class="carrito-etiqueta">Resumen de compra</p>
+          <h1>Tu carrito de compras</h1>
+          <p class="carrito-hero-texto">
+            Revisa tus productos, ajusta cantidades y confirma el total antes de
+            finalizar tu pedido.
+          </p>
+        </div>
+        <a href="tienda.html" class="carrito-link-seguir">Seguir comprando</a>
+      </section>
+
+      <section class="carrito-layout">
+        <div class="carrito-panel carrito-productos-panel">
+          <div class="carrito-panel-header">
+            <h2>Productos agregados</h2>
+            <button
+              id="vaciarCarritoBtn"
+              class="carrito-btn-secundario"
+              type="button"
+            >
+              Vaciar carrito
+            </button>
+          </div>
+
+          <div id="carritoVacio" class="carrito-vacio oculto">
+            <div class="carrito-vacio-icono">
+              <i class="fa-solid fa-cart-shopping"></i>
+            </div>
+            <h3>Tu carrito está vacío</h3>
+            <p>
+              Aún no has agregado productos. Ve a la tienda y selecciona los
+              dispositivos que deseas comprar.
+            </p>
+            <a href="tienda.html" class="carrito-btn-principal"
+              >Ir a la tienda</a
+            >
+          </div>
+
+          <div id="carritoLista" class="carrito-lista"></div>
+        </div>
+
+        <aside class="carrito-panel carrito-resumen-panel">
+          <h2>Resumen</h2>
+
+          <div class="carrito-resumen-linea">
+            <span>Productos</span>
+            <strong id="resumenCantidad">0</strong>
+          </div>
+
+          <div class="carrito-resumen-linea">
+            <span>Subtotal</span>
+            <strong id="resumenSubtotal">RD$0.00</strong>
+          </div>
+
+          <div class="carrito-resumen-linea">
+            <span>Envío</span>
+            <strong id="resumenEnvio">Gratis</strong>
+          </div>
+
+          <div class="carrito-resumen-linea total">
+            <span>Total</span>
+            <strong id="resumenTotal">RD$0.00</strong>
+          </div>
+
+          <button
+            id="finalizarCompraBtn"
+            class="carrito-btn-principal"
+            type="button"
+          >
+            Finalizar compra
+          </button>
+
+          <p class="carrito-nota">
+            Este resumen es visual. Si quieres que guarde pedidos reales por
+            usuario, hay que crear el módulo de carrito en tu backend.
+          </p>
+        </aside>
+      </section>
+    </main>
+
+    <script src="../js/general.js"></script>
+    <script src="../js/carrito.js"></script>
+  </body>
+</html>

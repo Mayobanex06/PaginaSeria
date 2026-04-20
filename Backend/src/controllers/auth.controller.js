@@ -20,7 +20,7 @@ async function register(req, res) {
     }
 
     const [existe] = await pool.query(
-      "SELECT id_usuarios FROM usuarios WHERE email = ?",
+      "SELECT id_usuario FROM usuarios WHERE email = ?",
       [email],
     );
 
@@ -81,13 +81,13 @@ function login(sessions) {
       const sid = crypto.randomBytes(24).toString("hex");
 
       sessions[sid] = {
-        id_usuario: user.id_usuarios,
+        id_usuario: user.id_usuario,
         expiresAt: Date.now() + 24 * 60 * 60 * 1000,
       };
 
       await pool.query(
-        "UPDATE usuarios SET ultimo_login = NOW() WHERE id_usuarios = ?",
-        [user.id_usuarios],
+        "UPDATE usuarios SET ultimo_login = NOW() WHERE id_usuario = ?",
+        [user.id_usuario],
       );
 
       res.cookie(COOKIE_NAME, sid, {
@@ -113,7 +113,7 @@ function login(sessions) {
 async function me(req, res) {
   try {
     const [rows] = await pool.query(
-      "SELECT id_usuarios, nombre, email, rol, estado, ultimo_login FROM usuarios WHERE id_usuarios = ?",
+      "SELECT id_usuario, nombre, email, rol, estado, ultimo_login FROM usuarios WHERE id_usuario = ?",
       [req.userId],
     );
 

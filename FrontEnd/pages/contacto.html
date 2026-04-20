@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contacto</title>
     <link rel="icon" type="image/png" href="faviinco.png" />
-    <link rel="stylesheet" href="../styles/1st.css" />
+    <link rel="stylesheet" href="../styles/general.css" />
+    <link rel="stylesheet" href="../styles/contacto.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
       rel="stylesheet"
@@ -20,7 +21,7 @@
     <header class="header-principal">
       <div class="header-logo" data-aos="fade-right" data-aos-duration="1000">
         <img
-          src="Imagenes/85e91e0a-7280-4aea-bb42-c9836994955c.png"
+          src="../assets/Imagenes/85e91e0a-7280-4aea-bb42-c9836994955c.png"
           alt="CoreTech Logo"
           class="logo-imagen"
         />
@@ -39,15 +40,21 @@
       </nav>
 
       <div class="header-iconos" data-aos="fade-left" data-aos-duration="1000">
+        <div class="user-menu">
+          <button id="userBtn" class="user-btn" type="button">
+            <i class="fa-solid fa-user"></i>
+          </button>
+
+          <div id="userCard" class="user-card oculto">
+            <p>Cargando...</p>
+          </div>
+        </div>
+
         <a href="#">
           <i class="fa-solid fa-magnifying-glass"></i>
         </a>
 
-        <a href="login.html">
-          <i class="fa-solid fa-user"></i>
-        </a>
-
-        <a href="tienda.html">
+        <a href="carrito.html">
           <i class="fa-solid fa-cart-shopping"></i>
         </a>
       </div>
@@ -209,5 +216,10 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="../js/general.js"></script>
+    <script>
+      AOS.init({
+        once: true,
+      });
+    </script>
   </body>
 </html>

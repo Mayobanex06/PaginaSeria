@@ -10,6 +10,7 @@ const adminMiddleware = require("./middlewares/admin.middleware");
 const authRoutes = require("./routes/auth.routes");
 const tiendaRoutes = require("./routes/tienda.routes");
 const adminRoutes = require("./routes/admin.routes");
+const carritoRoutes = require("./routes/carrito.routes");
 
 const app = express();
 
@@ -47,5 +48,6 @@ app.get("/api/health", async (req, res) => {
 app.use("/api", authRoutes(sessions, authMiddleware));
 app.use("/api/tienda", tiendaRoutes);
 app.use("/api/admin", adminRoutes(authMiddleware, adminMiddleware));
+app.use("/api/carrito", carritoRoutes(authMiddleware));
 
 module.exports = app;

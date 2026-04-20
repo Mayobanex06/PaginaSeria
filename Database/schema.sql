@@ -29,13 +29,15 @@ CREATE TABLE productos (
   estado TINYINT(1) NOT NULL DEFAULT 1
 );
 
-CREATE TABLE carritos (
-  id_carrito INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE carrito_items (
+  id_item INT AUTO_INCREMENT PRIMARY KEY,
   usuario_id INT NOT NULL,
   producto_id INT NOT NULL,
   cantidad INT NOT NULL DEFAULT 1,
-  FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario),
-  FOREIGN KEY (producto_id) REFERENCES productos(id_producto)
+  agregado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (usuario_id, producto_id),
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+  FOREIGN KEY (producto_id) REFERENCES productos(id_producto) ON DELETE CASCADE
 );
 
 CREATE TABLE direcciones (
