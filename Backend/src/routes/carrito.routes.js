@@ -17,7 +17,7 @@ module.exports = (authMiddleware) => {
     carritoController.actualizarCantidad,
   );
 
-  router.detele("/vaciar", authMiddleware, carritoController.vaciarCarrito);
+  router.delete("/vaciar", authMiddleware, carritoController.vaciarCarrito);
 
   return router;
 };
