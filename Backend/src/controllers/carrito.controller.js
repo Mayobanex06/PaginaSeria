@@ -113,9 +113,22 @@ async function obtenerCarrito(req, res) {
       [req.userId],
     );
 
+    const carrito = rows.map((item) => ({
+      id_item: item.id_item,
+      producto_id: Number(item.producto_id),
+      cantidad: Number(item.cantidad),
+      nombre: item.nombre,
+      marca: item.marca,
+      precio: Number(item.precio),
+      imagen: item.imagen,
+      categoria: item.categoria,
+      estado: Number(item.estado),
+      stock: Number(item.stock),
+    }));
+
     return res.status(200).json({
       ok: true,
-      carrito: rows,
+      carrito: carrito,
     });
   } catch (error) {
     console.error("Error obtener carrito >>>", error);

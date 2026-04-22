@@ -462,3 +462,147 @@ body {
     font-size: 18px;
   }
 }
+
+.carrito-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.carrito-item {
+  display: grid;
+  grid-template-columns: 110px 1fr auto;
+  align-items: center;
+  gap: 20px;
+
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 16px;
+
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+.carrito-item-img {
+  width: 110px;
+  height: 110px;
+
+  background: #f8fafc;
+  border-radius: 14px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  overflow: hidden;
+}
+
+.carrito-item-img img {
+  max-width: 100%;
+  max-height: 90px;
+  object-fit: contain;
+}
+
+.carrito-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.carrito-item-marca {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e73be;
+}
+
+.carrito-item-nombre {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.carrito-item-precio {
+  font-size: 16px;
+  font-weight: 700;
+  color: #374151;
+  margin: 0;
+}
+
+.carrito-item-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.cantidad-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: #f1f5f9;
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+
+.btn-cantidad {
+  width: 28px;
+  height: 28px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #1e73be;
+  color: white;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.btn-cantidad:hover {
+  background: #0b5fa5;
+}
+
+.cantidad {
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
+}
+
+.carrito-item-subtotal {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.btn-eliminar {
+  background: none;
+  border: none;
+
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.btn-eliminar:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .carrito-item {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .carrito-item-actions {
+    align-items: center;
+  }
+
+  .carrito-item-img {
+    margin: 0 auto;
+  }
+}
