@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS coretech_db;
 USE coretech_db;
 
 DROP TABLE IF EXISTS direcciones;
-DROP TABLE IF EXISTS carritos;
+DROP TABLE IF EXISTS carritos_items;
 DROP TABLE IF EXISTS productos;
 DROP TABLE IF EXISTS usuarios;
 
@@ -25,7 +25,7 @@ CREATE TABLE productos (
   precio DECIMAL(10,2) NOT NULL,
   stock INT NOT NULL DEFAULT 0,
   imagen VARCHAR(255) NOT NULL,
-  categoria ENUM('Samsung', 'Xiaomi', 'Apple', 'Accesorio') NOT NULL,
+  categoria ENUM('Smartphone', 'Accesorio') NOT NULL,
   estado TINYINT(1) NOT NULL DEFAULT 1
 );
 

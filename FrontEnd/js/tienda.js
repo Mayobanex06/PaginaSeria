@@ -56,6 +56,25 @@ function cargarProductos(lista) {
   }
 }
 
+function mostrarToast(mensaje, tipo = "success") {
+  const toast = document.createElement("div");
+  toast.classList.add("toast", `toast-${tipo}`);
+  toast.textContent = mensaje;
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("visible");
+  }, 10);
+
+  setTimeout(() => {
+    toast.classList.remove("visible");
+    setTimeout(() => {
+      toast.remove();
+    }, 300);
+  }, 2500);
+}
+
 function obtenerInfoBotones() {
   const boton = document.querySelectorAll(".btn-carrito");
 
@@ -83,6 +102,25 @@ function obtenerInfoBotones() {
         if (!response.ok) {
           throw new Error(data.error || "Error al agregar al carrito.");
         }
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          mostrarToast(
+            errorData.error || "No se pudo agregar el producto",
+            "error",
+          );
+          return;
+        }
+
+        mostrarToast("Producto agregado al carrito", "success");
+
+        btn.textContent = "Agregado";
+        btn.disabled = true;
+
+        setTimeout(() => {
+          btn.textContent = "Agregar al carrito";
+          btn.disabled = false;
+        }, 1200);
 
         console.log(data);
       } catch (error) {

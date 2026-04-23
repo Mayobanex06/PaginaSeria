@@ -34,5 +34,5 @@ VALUES
 SELECT * FROM productos
 WHERE id_producto > 0; 
 
-SELECT * FROM carrito
+SELECT * FROM carrito_items
 WHERE id_item > 0; 
