@@ -2,6 +2,8 @@
 
 // Bloque 2: Array de productos
 
+import { apiGet } from "./api.js";
+
 let productos = [];
 
 function crearTarjetaProducto(producto) {
@@ -131,23 +133,13 @@ function obtenerInfoBotones() {
 }
 
 async function obtenerProductos() {
-  try {
-    const response = await fetch("http://localhost:3000/api/tienda/productos");
-    const data = await response.json();
-    const mensaje = document.getElementById("mensaje-productos");
+  const data = await apiGet("/tienda/productos");
 
-    if (!response.ok || !data.ok) {
-      throw new Error(data.error || "No se pudieron cargar los productos");
-    }
+  productos = data.productos;
+  cargarProductos(productos);
+  obtenerInfoBotones();
 
-    productos = data.productos;
-    cargarProductos(productos);
-    obtenerInfoBotones();
-
-    mensaje.classList.add("oculto");
-  } catch (error) {
-    console.error("ERROR CARGANDO PRODUCTOS >>>", error);
-  }
+  mensaje.classList.add("oculto");
 }
 
 obtenerProductos();

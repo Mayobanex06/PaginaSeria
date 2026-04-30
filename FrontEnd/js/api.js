@@ -1,4 +1,4 @@
-window.API_BASE = "http://localhost:3000";
+window.API_BASE = "http://localhost:3000/api";
 
 // Módulo de funciones para interactuar con la API del backend
 
