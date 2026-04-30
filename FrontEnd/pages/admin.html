@@ -97,16 +97,52 @@
         <aside class="admin-panel-lateral">
           <div class="admin-panel admin-panel-menu">
             <h3>Administración</h3>
-            <button class="admin-opcion">Productos</button>
-            <button class="admin-opcion">Usuarios</button>
-            <button class="admin-opcion">Ventas</button>
-            <button class="admin-opcion">Reportes</button>
-            <button class="admin-opcion">Configuración</button>
+            <button class="admin-opcion" data-seccion="productos">
+              Productos
+            </button>
+
+            <button class="admin-opcion" data-seccion="usuarios">
+              Usuarios
+            </button>
+
+            <button class="admin-opcion" data-seccion="ventas">Ventas</button>
+
+            <button class="admin-opcion" data-seccion="reportes">
+              Reportes
+            </button>
+
+            <button class="admin-opcion" data-seccion="configuracion">
+              Configuración
+            </button>
           </div>
         </aside>
 
         <div class="admin-panel-principal">
-          <div class="admin-panel">
+          <div
+            id="panel-inicial"
+            class="admin-panel-inicial admin-panel-seccion"
+          >
+            <div class="panel-inicial-icono">
+              <i class="fa-solid fa-layer-group"></i>
+            </div>
+
+            <h2>Bienvenido al panel administrativo</h2>
+
+            <p>
+              En este panel puedes gestionar productos, usuarios, ventas y
+              reportes del sistema. Selecciona una opción del menú lateral para
+              comenzar.
+            </p>
+
+            <div class="panel-inicial-acciones">
+              <button data-seccion="productos">Gestionar productos</button>
+              <button data-seccion="usuarios">Ver usuarios</button>
+            </div>
+          </div>
+          <div
+            id="panel-productos"
+            class="admin-panel admin-panel-seccion oculto"
+          >
             <div class="admin-panel-header">
               <h3>Gestión de productos</h3>
 
@@ -140,65 +176,82 @@
                 <span>Acciones</span>
               </div>
 
-              <div id="adminTablaBody"></div>
+              <div id="adminTablaProductos"></div>
             </div>
+          </div>
+
+          <div
+            id="panel-usuarios"
+            class="admin-panel admin-panel-seccion oculto"
+          >
+            <div class="admin-panel-header">
+              <h3>Gestión de usuarios</h3>
+
+              <div class="admin-filtros">
+                <div class="admin-buscador">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <input
+                    type="text"
+                    id="buscarUsuario"
+                    placeholder="Buscar usuario..."
+                  />
+                </div>
+
+                <select class="admin-select" id="filtroRolUsuario">
+                  <option value="todos">Todos los roles</option>
+                  <option value="Admin">Admin</option>
+                  <option value="User">User</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="admin-tabla">
+              <div class="admin-tabla-head admin-tabla-head-usuarios">
+                <span>ID</span>
+                <span>Nombre</span>
+                <span>Email</span>
+                <span>Rol</span>
+                <span>Estado</span>
+                <span>Acciones</span>
+              </div>
+
+              <div id="adminTablaUsuarios"></div>
+            </div>
+          </div>
+
+          <div id="panel-ventas" class="admin-panel admin-panel-seccion oculto">
+            <h3>Ventas</h3>
+            <p>Sección de ventas pendiente.</p>
+          </div>
+
+          <div
+            id="panel-reportes"
+            class="admin-panel admin-panel-seccion oculto"
+          >
+            <h3>Reportes</h3>
+            <p>Sección de reportes pendiente.</p>
+          </div>
+
+          <div
+            id="panel-configuracion"
+            class="admin-panel admin-panel-seccion oculto"
+          >
+            <h3>Configuración</h3>
+            <p>Sección de configuración pendiente.</p>
           </div>
         </div>
-        <div id="modalEditarProducto" class="modal oculto">
-          <div class="modal-contenido">
-            <div class="modal-header">
-              <h3>Editar producto</h3>
-              <button type="button" id="cerrarModalEditar" class="modal-cerrar">
-                ×
-              </button>
-            </div>
 
-            <form id="formEditarProducto" class="modal-form">
-              <input type="hidden" id="editarIdProducto" />
-
-              <label>
-                Nombre
-                <input type="text" id="editarNombre" required />
-              </label>
-
-              <label>
-                Marca
-                <select id="editarMarca" required>
-                  <option value="Samsung">Samsung</option>
-                  <option value="Apple">Apple</option>
-                  <option value="Xiaomi">Xiaomi</option>
-                </select>
-              </label>
-
-              <label>
-                Precio
-                <input type="number" id="editarPrecio" step="0.01" required />
-              </label>
-
-              <label>
-                Stock
-                <input type="number" id="editarStock" required />
-              </label>
-
-              <label>
-                Estado
-                <select id="editarEstado" required>
-                  <option value="1">Activo</option>
-                  <option value="0">Inactivo</option>
-                </select>
-              </label>
-
-              <div class="modal-acciones">
-                <button type="button" id="cancelarModalEditar">Cancelar</button>
-                <button type="submit">Guardar cambios</button>
-              </div>
-            </form>
-          </div>
+        <div id="modalAdmin" class="modal oculto">
+          <div class="modal-contenido"></div>
         </div>
       </section>
     </main>
 
-    <script src="../js/admin.js"></script>
     <script src="../js/general.js"></script>
+    <script src="../js/admin/admin-api.js"></script>
+    <script src="../js/admin/admin-auth.js"></script>
+    <script src="../js/admin/admin-productos.js"></script>
+    <script src="../js/admin/admin-usuarios.js"></script>
+    <script src="../js/admin/admin.js"></script>
   </body>
 </html>

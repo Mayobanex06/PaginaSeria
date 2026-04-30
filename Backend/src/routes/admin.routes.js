@@ -30,5 +30,33 @@ module.exports = (authMiddleware, adminMiddleware) => {
     adminController.editarProducto,
   );
 
+  router.get(
+    "/usuarios/obtener",
+    authMiddleware,
+    adminMiddleware,
+    adminController.obtenerUsuario,
+  );
+
+  router.post(
+    "/usuarios/agregar",
+    authMiddleware,
+    adminMiddleware,
+    adminController.agregarUsuario,
+  );
+
+  router.put(
+    "/usuarios/:id",
+    authMiddleware,
+    adminMiddleware,
+    adminController.editarUsuario,
+  );
+
+  router.patch(
+    "/usuarios/:id/desactivar",
+    authMiddleware,
+    adminMiddleware,
+    adminController.eliminarUsuario,
+  );
+
   return router;
 };
