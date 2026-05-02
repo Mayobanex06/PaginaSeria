@@ -18,13 +18,14 @@ async function solicitud(url, options = {}) {
 
     const data = await response.json();
 
-    if (!response.ok || !data.ok) {
-      throw new Error(data.error || "Error en la solicitud");
+    if (!response.ok) {
+      const error = new Error(data?.error || `Error HTTP ${response.status}`);
+      error.status = response.status;
+      throw error;
     }
 
     return data;
   } catch (error) {
-    console.error("API ERROR >>>", error);
     throw error;
   }
 }

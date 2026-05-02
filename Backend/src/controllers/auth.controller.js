@@ -118,12 +118,14 @@ async function me(req, res) {
     );
 
     if (rows.length === 0) {
-      return res.status(404).json({ error: "Usuario no encontrado" });
+      return res
+        .status(404)
+        .json({ ok: false, error: "Usuario no encontrado" });
     }
 
     res.json({ ok: true, user: rows[0] });
   } catch (error) {
-    res.status(500).json({ error: "Error al obtener usuario" });
+    res.status(500).json({ ok: false, error: "Error al obtener usuario" });
   }
 }
 

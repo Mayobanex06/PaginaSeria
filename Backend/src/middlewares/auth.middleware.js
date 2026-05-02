@@ -5,12 +5,19 @@ function authMiddleware(sessions) {
     const sid = req.cookies[COOKIE_NAME];
 
     if (!sid || !sessions[sid]) {
-      return res.status(401).json({ error: "No autentificado" });
+      return res.status(401).json({
+        ok: false,
+        error: "No autenticado",
+      });
     }
 
     if (Date.now() > sessions[sid].expiresAt) {
       delete sessions[sid];
-      return res.status(401).json({ error: "Sesion expirada" });
+
+      return res.status(401).json({
+        ok: false,
+        error: "Sesión expirada",
+      });
     }
 
     req.userId = sessions[sid].id_usuario;

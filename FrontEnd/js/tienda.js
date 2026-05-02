@@ -133,13 +133,17 @@ function obtenerInfoBotones() {
 }
 
 async function obtenerProductos() {
-  const data = await apiGet("/tienda/productos");
+  try {
+    const data = await apiGet("/tienda/productos");
 
-  productos = data.productos;
-  cargarProductos(productos);
-  obtenerInfoBotones();
+    productos = data.productos;
+    cargarProductos(productos);
+    obtenerInfoBotones();
 
-  mensaje.classList.add("oculto");
+    mensaje.classList.add("oculto");
+  } catch (error) {
+    return;
+  }
 }
 
 obtenerProductos();
