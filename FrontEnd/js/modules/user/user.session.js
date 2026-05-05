@@ -5,10 +5,12 @@ export async function obtenerSesionActual() {
     const data = await obtenerUsuario();
     return data.user;
   } catch (error) {
+    if (error.status === 401) {
+      return null;
+    }
     console.error("ERROR OBTENER SESION >>>", error);
-    return null;
+    throw error;
   }
-  throw error;
 }
 
 export function usuarioEsAdmin(usuario) {

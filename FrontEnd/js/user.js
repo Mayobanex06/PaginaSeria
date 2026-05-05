@@ -15,44 +15,67 @@ const userBtn = document.getElementById("userBtn");
 const userCard = document.getElementById("userCard");
 const headerIconos = document.querySelector(".header-iconos");
 
-async function cargarTarjetaUsuario() {
+let usuarioCache = null;
+let sesionCargada = false;
+
+async function cargarSesion() {
+  if (sesionCargada) {
+    return usuarioCache;
+  }
+
   try {
-    const user = await obtenerSesionActual();
+    usuarioCache = await obtenerSesionActual();
+    sesionCargada = true;
+
+    return usuarioCache;
+  } catch (error) {
+    console.error("ERROR CARGAR SESION >>>", error);
+    throw error;
+  }
+}
+
+async function cargarTarjetaUsuario() {
+  if (!userCard) return;
+
+  try {
+    const user = await cargarSesion();
 
     if (!user) {
       userCard.innerHTML = crearTarjetaUsuarioInactivo();
-      registrarEventosUsuarioInactivo();
       return;
     }
 
     userCard.innerHTML = crearTarjetaUsuarioActivo(user);
-    registrarEventoLogout();
   } catch (error) {
     userCard.innerHTML = crearTarjetaUsuarioError();
   }
 }
 
-function registrarEventoLogout() {
-  const logoutBtn = document.getElementById("logoutBtn");
+function registrarEventosUserCard() {
+  if (!userCard) return;
 
-  if (!logoutBtn) return;
+  userCard.addEventListener("click", async (e) => {
+    const logoutBtn = e.target.closest("#logoutBtn");
+    const actionBtn = e.target.closest("[data-action]");
 
-  logoutBtn.addEventListener("click", async () => {
-    await cerrarSesionActual();
-    window.location.href = "login.html";
-  });
-}
+    if (logoutBtn) {
+      await cerrarSesionActual();
 
-function registrarEventosUsuarioInactivo() {
-  userCard.addEventListener("click", (e) => {
-    const action = e.target.dataset.action;
+      usuarioCache = null;
+      sesionCargada = false;
 
-    if (action === "login") {
       window.location.href = "login.html";
+      return;
     }
 
-    if (action === "register") {
+    if (actionBtn?.dataset.action === "login") {
+      window.location.href = "login.html";
+      return;
+    }
+
+    if (actionBtn?.dataset.action === "register") {
       window.location.href = "register.html";
+      return;
     }
   });
 }
@@ -77,9 +100,13 @@ function registrarToggleTarjetaUsuario() {
 
 async function verificarAdmin() {
   try {
-    const user = await obtenerSesionActual();
+    const user = await cargarSesion();
 
-    if (usuarioEsAdmin(user) && headerIconos) {
+    if (
+      usuarioEsAdmin(user) &&
+      headerIconos &&
+      !headerIconos.querySelector(".admin-link")
+    ) {
       headerIconos.insertAdjacentHTML("beforeend", crearIconoAdmin());
     }
   } catch (error) {
@@ -88,4 +115,5 @@ async function verificarAdmin() {
 }
 
 registrarToggleTarjetaUsuario();
+registrarEventosUserCard();
 verificarAdmin();

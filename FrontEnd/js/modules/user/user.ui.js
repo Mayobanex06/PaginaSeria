@@ -12,8 +12,8 @@ export function crearTarjetaUsuarioInactivo() {
   return `
         <h4>Mi cuenta</h4>
         <p>No has iniciado sesión.</p>
-        <button class="btn-user" onclick="window.location.href='login.html'">Iniciar sesión</button>
-        <button class="btn-user-sec" onclick="window.location.href='register.html'">Registrarse</button>
+        <button class="btn-user" data-action="login">Iniciar sesión</button>
+        <button class="btn-user-sec" data-action="register">Registrarse</button>
     `;
 }
 
