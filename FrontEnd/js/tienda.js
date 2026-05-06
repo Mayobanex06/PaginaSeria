@@ -1,177 +1,35 @@
-// Pa cualquier pendejo que quiera trabajar esta mrd aca les dejo comentados los bloques del codigo (NETFLIX SACA STEEL BALL RUN YA PORFAVOR)
-
-// Bloque 2: Array de productos
-
-import { apiGet } from "./api.js";
+import { obtenerProductos } from "./services/tienda.services.js";
+import { renderProductos } from "./modules/tienda/tienda.ui.js";
+import { filtrarProductosPorCategoria } from "./modules/tienda/tienda.filters.js";
+import {
+  registrarEventosTienda,
+  registrarEventosFiltroCategorias,
+} from "./modules/tienda/tienda.events.js";
 
 let productos = [];
 
-function crearTarjetaProducto(producto) {
-  return `
-    <div class="producto-card" data-categoria="${producto.marca}">
-      <div class="producto-imagen">
-        <img
-          src="${producto.imagen}"
-          alt="${producto.marca} ${producto.nombre}"
-        />
-      </div>
-
-      <div class="producto-info">
-        <p class="marca">${producto.marca}</p>
-        <h3 class="nombre">${producto.nombre}</h3>
-        <p class="precio">RD$${producto.precio.toLocaleString("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}</p>
-
-        <div class="memorias">
-          <button class="chip">256GB</button>
-          <button class="chip">512GB</button>
-        </div>
-
-        <button class="btn-carrito" data-producto-id="${producto.id}">Agregar al carrito</button>
-      </div>
-    </div>
-  `;
-}
-
 const contenedorProductos = document.getElementById("productos-contenedor");
-
-function cargarProductos(lista) {
-  if (!contenedorProductos) {
-    console.error("No se encontró el contenedor de productos");
-    return;
-  }
-
-  contenedorProductos.innerHTML = lista
-    .map((producto) => crearTarjetaProducto(producto))
-    .join("");
-
-  console.log(lista);
-
-  const boton = document.querySelectorAll(".btn-carrito");
-
-  const resultadoTexto = document.querySelector(".resultado-texto");
-
-  if (resultadoTexto) {
-    resultadoTexto.textContent = `Mostrando ${lista.length} productos`;
-  }
-}
-
-function mostrarToast(mensaje, tipo = "success") {
-  const toast = document.createElement("div");
-  toast.classList.add("toast", `toast-${tipo}`);
-  toast.textContent = mensaje;
-
-  document.body.appendChild(toast);
-
-  setTimeout(() => {
-    toast.classList.add("visible");
-  }, 10);
-
-  setTimeout(() => {
-    toast.classList.remove("visible");
-    setTimeout(() => {
-      toast.remove();
-    }, 300);
-  }, 2500);
-}
-
-function obtenerInfoBotones() {
-  const boton = document.querySelectorAll(".btn-carrito");
-
-  boton.forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      try {
-        const productoId = btn.dataset.productoId;
-
-        console.log("CLICK", productoId);
-        console.log(productoId);
-        const response = await fetch(
-          "http://localhost:3000/api/carrito/agregar",
-          {
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            method: "POST",
-            body: JSON.stringify({
-              producto_id: productoId,
-            }),
-          },
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || "Error al agregar al carrito.");
-        }
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          mostrarToast(
-            errorData.error || "No se pudo agregar el producto",
-            "error",
-          );
-          return;
-        }
-
-        mostrarToast("Producto agregado al carrito", "success");
-
-        btn.textContent = "Agregado";
-        btn.disabled = true;
-
-        setTimeout(() => {
-          btn.textContent = "Agregar al carrito";
-          btn.disabled = false;
-        }, 1200);
-
-        console.log(data);
-      } catch (error) {
-        console.error("Error >>>", error);
-      }
-    });
-  });
-}
-
-async function obtenerProductos() {
-  try {
-    const data = await apiGet("/tienda/productos");
-
-    productos = data.productos;
-    cargarProductos(productos);
-    obtenerInfoBotones();
-
-    mensaje.classList.add("oculto");
-  } catch (error) {
-    return;
-  }
-}
-
-obtenerProductos();
-
-// Bloque 4: Logica detras del filtro por marca
-
 const categorias = document.querySelectorAll(".categoria");
 
-categorias.forEach((cat) => {
-  cat.addEventListener("click", () => {
-    categorias.forEach((c) => c.classList.remove("categoria-activa"));
-    cat.classList.add("categoria-activa");
+async function cargarProductos() {
+  try {
+    const data = await obtenerProductos();
+    productos = data.productos || [];
+    renderProductos(productos, contenedorProductos);
+  } catch (error) {
+    console.error("Error al cargar los productos:", error);
+  }
+}
 
-    const categoriaSeleccionada = cat.dataset.categoria;
+function aplicarFiltro(categoria) {
+  const productosFiltrados = filtrarProductosPorCategoria(productos, categoria);
+  renderProductos(productosFiltrados, contenedorProductos);
+}
 
-    const productos = document.querySelectorAll(".producto-card");
-
-    productos.forEach((pro) => {
-      const productoCategoria = pro.dataset.categoria;
-
-      if (
-        categoriaSeleccionada === "all" ||
-        categoriaSeleccionada === productoCategoria
-      ) {
-        pro.classList.remove("oculto");
-      } else {
-        pro.classList.add("oculto");
-      }
-    });
-  });
+registrarEventosTienda(contenedorProductos);
+registrarEventosFiltroCategorias({
+  categorias,
+  onFiltrar: aplicarFiltro,
 });
+
+cargarProductos();

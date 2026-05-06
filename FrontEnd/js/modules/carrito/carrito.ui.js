@@ -1,9 +1,4 @@
-export function formatearPrecio(valor) {
-  return `RD$${Number(valor).toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
-}
+import { formatearPrecio } from "../../utils/formatters.js";
 
 export function crearTarjetaCarrito(carritoItem) {
   return `<div class="carrito-item" data-producto-id="${carritoItem.producto_id}">

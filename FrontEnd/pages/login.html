@@ -61,12 +61,7 @@
           </p>
         </header>
 
-        <form
-          class="login-form"
-          action="http://localhost:3000/api/login"
-          method="post"
-          id="formLogin"
-        >
+        <form class="login-form" id="formLogin">
           <label class="campo">
             <span class="campo-label">Correo</span>
             <input
@@ -123,7 +118,7 @@
   </body>
 
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script src="../js/auth.js"></script>
+  <script type="module" src="../js/auth.js"></script>
   <script type="module" src="../js/user.js"></script>
   <script>
     AOS.init({
