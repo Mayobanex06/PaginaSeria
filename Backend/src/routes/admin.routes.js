@@ -6,7 +6,7 @@ const adminController = require("../controllers/admin.controller");
 module.exports = (authMiddleware, adminMiddleware) => {
   router.get("/", authMiddleware, adminMiddleware, adminController.accesoAdmin);
   router.get(
-    "/productos",
+    "/productos/obtener",
     authMiddleware,
     adminMiddleware,
     adminController.obtenerProductosAdmin,
@@ -18,13 +18,13 @@ module.exports = (authMiddleware, adminMiddleware) => {
     adminController.resumenAdmin,
   );
   router.patch(
-    "/producto/:id/inactivar",
+    "/productos/:id/inactivar",
     authMiddleware,
     adminMiddleware,
     adminController.inactivarProducto,
   );
   router.put(
-    "/productos/:id",
+    "/productos/:id/editar",
     authMiddleware,
     adminMiddleware,
     adminController.editarProducto,
@@ -45,7 +45,7 @@ module.exports = (authMiddleware, adminMiddleware) => {
   );
 
   router.put(
-    "/usuarios/:id",
+    "/usuarios/:id/editar",
     authMiddleware,
     adminMiddleware,
     adminController.editarUsuario,
