@@ -150,17 +150,16 @@
                 <div class="admin-buscador">
                   <i class="fa-solid fa-magnifying-glass"></i>
                   <input
-                    id="adminSearch"
+                    id="buscarProducto"
                     type="text"
                     placeholder="Buscar producto..."
                   />
                 </div>
 
-                <select id="adminMarca" class="admin-select">
-                  <option value="todas">Todas las marcas</option>
-                  <option value="Samsung">Samsung</option>
-                  <option value="Apple">Apple</option>
-                  <option value="Xiaomi">Xiaomi</option>
+                <select id="filtroEstadoProducto" class="admin-select">
+                  <option value="todos">Todos</option>
+                  <option value="1">Activo</option>
+                  <option value="0">Inactivo</option>
                 </select>
               </div>
             </div>
@@ -197,10 +196,10 @@
                   />
                 </div>
 
-                <select class="admin-select" id="filtroRolUsuario">
-                  <option value="todos">Todos los roles</option>
-                  <option value="Admin">Admin</option>
-                  <option value="User">User</option>
+                <select class="admin-select" id="filtroEstadoUsuario">
+                  <option value="todos">Todos</option>
+                  <option value="1">Activo</option>
+                  <option value="0">Inactivo</option>
                 </select>
               </div>
             </div>
@@ -248,10 +247,6 @@
     </main>
 
     <script type="module" src="../js/user.js"></script>
-    <script src="../js/admin/admin-api.js"></script>
-    <script src="../js/admin/admin-auth.js"></script>
-    <script src="../js/admin/admin-productos.js"></script>
-    <script src="../js/admin/admin-usuarios.js"></script>
-    <script src="../js/admin/admin.js"></script>
+    <script type="module" src="../js/admin.js"></script>
   </body>
 </html>

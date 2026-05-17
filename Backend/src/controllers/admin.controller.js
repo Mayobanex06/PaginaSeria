@@ -19,9 +19,9 @@ async function obtenerProductosAdmin(req, res) {
         precio,
         imagen,
         categoria,
-        stock
+        stock,
+        estado
       FROM productos
-      WHERE estado = 1
       ORDER BY id_producto DESC
     `);
 
@@ -33,6 +33,7 @@ async function obtenerProductosAdmin(req, res) {
       imagen: producto.imagen,
       categoria: producto.categoria,
       stock: producto.stock,
+      estado: producto.estado,
     }));
 
     res.json({ ok: true, productos });
@@ -153,7 +154,6 @@ async function obtenerUsuario(req, res) {
       ultimo_login,
       creado_hace
       FROM usuarios
-      WHERE estado = 1
       ORDER BY id_usuario DESC`,
     );
 
