@@ -93,7 +93,7 @@ function login(sessions) {
       res.cookie(COOKIE_NAME, sid, {
         httpOnly: true,
         sameSite: "lax",
-        secure: false,
+        secure: process.env.NODE_ENV === "production",
         maxAge: 24 * 60 * 60 * 1000,
         path: "/",
       });
@@ -137,7 +137,13 @@ function logout(sessions) {
       delete sessions[sid];
     }
 
-    res.clearCookie(COOKIE_NAME);
+    res.clearCookie(COOKIE_NAME, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+    });
+
     res.json({ ok: true });
   };
 }
