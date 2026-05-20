@@ -1,12 +1,58 @@
 const pool = require("../config/db");
 const bcrypt = require("bcrypt");
 
-async function accesoAdmin(req, res) {
-  res.json({ ok: true, mensaje: "Acceso permitido a admin" });
+const MARCAS_PERMITIDAS = ["Samsung", "Xiaomi", "Apple"];
+const ROLES_PERMITIDOS = ["Admin", "User"];
+
+function idValido(id) {
+  const idNumero = Number(id);
+  return Number.isInteger(idNumero) && idNumero > 0;
+}
+
+function validarProductoAdmin({ nombre, marca, precio, stock, estado }) {
+  const nombreLimpio = nombre?.trim();
+  const marcaLimpia = marca?.trim();
+  const precioNumero = Number(precio);
+  const stockNumero = Number(stock);
+  const estadoNumero = Number(estado);
+
+  if (!nombreLimpio || nombreLimpio.length < 2) {
+    return { error: "El nombre del producto no es válido" };
+  }
+
+  if (!MARCAS_PERMITIDAS.includes(marcaLimpia)) {
+    return { error: "La marca no es válida" };
+  }
+
+  if (Number.isNaN(precioNumero) || precioNumero <= 0) {
+    return { error: "El precio debe ser mayor que 0" };
+  }
+
+  if (!Number.isInteger(stockNumero) || stockNumero < 0) {
+    return { error: "El stock debe ser un número entero mayor o igual a 0" };
+  }
+
+  if (![0, 1].includes(estadoNumero)) {
+    return { error: "El estado no es válido" };
+  }
+
+  return {
+    datos: {
+      nombre: nombreLimpio,
+      marca: marcaLimpia,
+      precio: precioNumero,
+      stock: stockNumero,
+      estado: estadoNumero,
+    },
+  };
 }
 
 function emailValido(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+async function accesoAdmin(req, res) {
+  res.json({ ok: true, mensaje: "Acceso permitido a admin" });
 }
 
 async function obtenerProductosAdmin(req, res) {
@@ -87,9 +133,15 @@ async function inactivarProducto(req, res) {
   try {
     const { id } = req.params;
 
+    if (!idValido(id)) {
+      return res
+        .status(400)
+        .json({ ok: false, error: "ID de producto no válido" });
+    }
+
     const [result] = await pool.query(
       "UPDATE productos SET estado = 0 WHERE id_producto = ?",
-      [id],
+      [Number(id)],
     );
 
     if (result.affectedRows === 0) {
@@ -115,11 +167,24 @@ async function inactivarProducto(req, res) {
 async function editarProducto(req, res) {
   try {
     const { id } = req.params;
-    const { nombre, marca, precio, stock, estado } = req.body;
+
+    if (!idValido(id)) {
+      return res
+        .status(400)
+        .json({ ok: false, error: "ID de producto no válido" });
+    }
+
+    const validacion = validarProductoAdmin(req.body);
+
+    if (validacion.error) {
+      return res.status(400).json({ ok: false, error: validacion.error });
+    }
+
+    const { nombre, marca, precio, stock, estado } = validacion.datos;
 
     const [result] = await pool.query(
       "UPDATE productos SET nombre = ?, marca = ?, precio = ?, stock = ?, estado = ? WHERE id_producto = ?",
-      [nombre, marca, precio, stock, estado, id],
+      [nombre, marca, precio, stock, estado, Number(id)],
     );
 
     if (result.affectedRows === 0) {
@@ -193,11 +258,16 @@ async function agregarUsuario(req, res) {
       return res.status(400).json({ ok: false, error: "Email no válido" });
     }
 
+    if (password.length < 6) {
+      return res.status(400).json({
+        ok: false,
+        error: "La contraseña debe tener al menos 6 caracteres",
+      });
+    }
+
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const rolesPermitidos = ["Admin", "User"];
-
-    if (!rolesPermitidos.includes(rol)) {
+    if (!ROLES_PERMITIDOS.includes(rol)) {
       return res.status(400).json({ ok: false, error: "Rol no permitido" });
     }
 
@@ -229,28 +299,40 @@ async function editarUsuario(req, res) {
     const { id } = req.params;
     const { nombre, email, rol, estado } = req.body;
 
-    if (!nombre || !email || !rol || estado === undefined) {
+    if (!idValido(id)) {
+      return res
+        .status(400)
+        .json({ ok: false, error: "ID de usuario no válido" });
+    }
+
+    const nombreLimpio = nombre?.trim();
+    const emailLimpio = email?.trim().toLowerCase();
+    const estadoNumero = Number(estado);
+
+    if (!nombreLimpio || !emailLimpio || !rol || estado === undefined) {
       return res
         .status(400)
         .json({ ok: false, error: "Faltan campos requeridos" });
     }
 
-    if (![0, 1].includes(Number(estado))) {
+    if (!emailValido(emailLimpio)) {
+      return res.status(400).json({ ok: false, error: "Email no válido" });
+    }
+
+    if (![0, 1].includes(estadoNumero)) {
       return res.status(400).json({
         ok: false,
         error: "Estado no válido, debe ser 0 o 1",
       });
     }
 
-    const rolesPermitidos = ["Admin", "User"];
-
-    if (!rolesPermitidos.includes(rol)) {
+    if (!ROLES_PERMITIDOS.includes(rol)) {
       return res.status(400).json({ ok: false, error: "Rol no permitido" });
     }
 
     const [result] = await pool.query(
       "UPDATE usuarios SET nombre = ?, email = ?, rol = ?, estado = ? WHERE id_usuario = ?",
-      [nombre.trim(), email.trim(), rol, estado, id],
+      [nombreLimpio, emailLimpio, rol, estadoNumero, Number(id)],
     );
 
     if (result.affectedRows === 0) {
@@ -276,9 +358,16 @@ async function editarUsuario(req, res) {
 async function eliminarUsuario(req, res) {
   try {
     const { id } = req.params;
+
+    if (!idValido(id)) {
+      return res
+        .status(400)
+        .json({ ok: false, error: "ID de usuario no válido" });
+    }
+
     const [result] = await pool.query(
       "UPDATE usuarios SET estado = 0 WHERE id_usuario = ?",
-      [id],
+      [Number(id)],
     );
 
     if (result.affectedRows === 0) {
