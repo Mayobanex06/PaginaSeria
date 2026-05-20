@@ -41,9 +41,8 @@ async function register(req, res) {
   } catch (err) {
     console.error("REGISTER ERROR >>>", err);
     return res.status(500).json({
-      error: "Error en registro",
-      detalle: err.message,
-      code: err.code,
+      ok: false,
+      error: "Error interno del servidor",
     });
   }
 }
@@ -102,9 +101,8 @@ function login(sessions) {
     } catch (err) {
       console.error("LOGIN ERROR >>>", err);
       return res.status(500).json({
-        error: "Error en login",
-        detalle: err.message,
-        code: err.code,
+        ok: false,
+        error: "Error interno del servidor",
       });
     }
   };
@@ -125,7 +123,7 @@ async function me(req, res) {
 
     res.json({ ok: true, user: rows[0] });
   } catch (error) {
-    res.status(500).json({ ok: false, error: "Error al obtener usuario" });
+    res.status(500).json({ ok: false, error: "Error interno del servidor" });
   }
 }
 
