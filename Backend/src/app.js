@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const helmet = require("helmet");
 
 const authMiddlewareFactory = require("./middlewares/auth.middleware");
 const adminMiddleware = require("./middlewares/admin.middleware");
@@ -13,6 +14,7 @@ const adminRoutes = require("./routes/admin.routes");
 const carritoRoutes = require("./routes/carrito.routes");
 
 const app = express();
+app.use(helmet());
 
 const sessions = {};
 
