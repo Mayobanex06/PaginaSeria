@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pagina de inicio</title>
+    <link rel="icon" type="image/png" href="faviinco.png" />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="../styles/general.css" />
+    <link rel="stylesheet" href="../styles/finalizar.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <main class="finalizar-main">
+      <section class="checkout-header">
+        <p class="checkout-etiqueta">Proceso de compra</p>
+
+        <h1>Finalizar compra</h1>
+
+        <span class="checkout-texto">
+          Completa tus datos para terminar el pedido y finalizar la compra.
+        </span>
+      </section>
+
+      <section class="checkout-layout">
+        <!-- Formulario -->
+        <form id="checkoutForm" class="checkout-form">
+          <h2>Informacion sobre la entrega</h2>
+
+          <div class="checkout-input-group">
+            <label for="direccion">Direccion</label>
+
+            <input
+              type="text"
+              id="direccion"
+              placeholder="Ej: Av. Lopez de vega #20"
+              required
+            />
+          </div>
+
+          <div class="checkout-input-group">
+            <label for="telefono">Telefono</label>
+
+            <input
+              type="text"
+              id="telefono"
+              placeholder="Ej: 809-000-000"
+              required
+            />
+          </div>
+
+          <div class="checkout-input-group">
+            <label for="metodoPago">Metodo de pago</label>
+
+            <select id="metodoPago" required>
+              <option value="Tarjeta">Tarjeta</option>
+            </select>
+          </div>
+
+          <div class="checkout-input-group">
+            <label for="numeroTarjeta">Número de tarjeta</label>
+
+            <input
+              type="text"
+              id="numeroTarjeta"
+              placeholder="Ej: 4242 4242 4242 4242"
+              maxlength="19"
+            />
+          </div>
+
+          <div class="checkout-card-row">
+            <div class="checkout-input-group">
+              <label for="fechaExpiracion">Fecha de expiración</label>
+
+              <input
+                type="text"
+                id="fechaExpiracion"
+                placeholder="MM/AA"
+                maxlength="5"
+              />
+            </div>
+
+            <div class="checkout-input-group">
+              <label for="ccv">CCV</label>
+
+              <input type="text" id="ccv" placeholder="123" maxlength="4" />
+            </div>
+          </div>
+
+          <div class="checkout-input-group">
+            <label for="nota">Nota adicional</label>
+
+            <textarea
+              id="nota"
+              placeholder="Referencia, horario o informaciones adicionales"
+            ></textarea>
+          </div>
+
+          <button type="submit" class="checkout-btn">Confirmar pedido</button>
+        </form>
+
+        <!-- Resumen -->
+        <aside class="checkout-resumen">
+          <h2>Resumen del pedido</h2>
+
+          <div id="checkoutResumen">
+            <p>Cargando la compra....</p>
+          </div>
+        </aside>
+      </section>
+    </main>
+    <script type="module" src="../js/finalizar.js"></script>
+  </body>
+</html>

@@ -1,0 +1,252 @@
+.finalizar-main {
+  background: #f8faff;
+  min-height: 100vh;
+  padding: 60px 80px;
+}
+
+.checkout-header {
+  margin-bottom: 40px;
+}
+
+.checkout-etiqueta {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  color: #1e73be;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.checkout-header h1 {
+  margin: 0 0 14px;
+  font-size: 48px;
+  color: #0b3c5d;
+}
+
+.checkout-texto {
+  font-size: 16px;
+  color: #4b5563;
+}
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.checkout-form,
+.checkout-resumen {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.finalizar-main {
+  background: #f8faff;
+  min-height: 100vh;
+  padding: 60px 80px;
+}
+
+.checkout-header {
+  margin-bottom: 40px;
+}
+
+.checkout-etiqueta {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  color: #1e73be;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.checkout-header h1 {
+  margin: 0 0 14px;
+  font-size: 48px;
+  color: #0b3c5d;
+}
+
+.checkout-texto {
+  font-size: 16px;
+  color: #4b5563;
+}
+
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.checkout-form,
+.checkout-resumen {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.checkout-input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.checkout-input-group label {
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.checkout-input-group input,
+.checkout-input-group select,
+.checkout-input-group textarea {
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  font-family: inherit;
+}
+
+.checkout-input-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.checkout-btn {
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  background: linear-gradient(90deg, #1e73be, #5a7df0);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.checkout-btn:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+  .finalizar-main {
+    padding: 40px 20px;
+  }
+
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-header h1 {
+    font-size: 36px;
+  }
+}
+.checkout-card-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+@media (max-width: 600px) {
+  .checkout-card-row {
+    grid-template-columns: 1fr;
+  }
+}
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.checkout-form,
+.checkout-resumen {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.checkout-input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.checkout-input-group label {
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.checkout-input-group input,
+.checkout-input-group select,
+.checkout-input-group textarea {
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  font-family: inherit;
+}
+
+.checkout-input-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.checkout-card-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.checkout-btn {
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  background: linear-gradient(90deg, #1e73be, #5a7df0);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.checkout-btn:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+  .finalizar-main {
+    padding: 40px 20px;
+  }
+
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-header h1 {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 600px) {
+  .checkout-card-row {
+    grid-template-columns: 1fr;
+  }
+}
