@@ -16,4 +16,9 @@ export function actualizarCantidad(id, cantidad) {
 
 export function eliminarProducto(id) {
   return apiDelete(`/carrito/eliminar/${id}`);
+
+}
+
+export function vaciarCarrito() {
+  return apiDelete("/carrito/Vaciar");
 }
