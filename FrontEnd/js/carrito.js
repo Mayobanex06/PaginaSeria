@@ -37,4 +37,15 @@ registrarEventosCarrito({
   recargarCarrito: cargarCarrito,
 });
 
+const btnFinalizar =
+  document.getElementById("finalizarCompraBtn");
+
+if (btnFinalizar) {
+  btnFinalizar.addEventListener("click", () => {
+    window.location.href = "finalizar.html";
+  });
+}
+
 cargarCarrito();
+
+
