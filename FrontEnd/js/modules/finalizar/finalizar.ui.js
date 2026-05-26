@@ -1,27 +1,42 @@
+export function formatearPrecio(valor) {
+  return `RD$${Number(valor).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+}
 
 export function renderResumenCheckout(carrito) {
   if (!carrito || carrito.length === 0) {
     return `
-      <p>No hay productos en el carrito.</p>
+      <div class="checkout-vacio">
+        <p>No hay productos en tu carrito.</p>
+
+        <a href="tienda.html">
+          Regresar a la tienda
+        </a>
+      </div>
     `;
   }
 
   let subtotal = 0;
+  let cantidadTotal = 0;
 
   const productosHTML = carrito
-    .map((producto) => {
+    .map((item) => {
       const subtotalProducto =
-        producto.precio * producto.cantidad;
+        Number(item.precio) * Number(item.cantidad);
 
       subtotal += subtotalProducto;
+
+      cantidadTotal += Number(item.cantidad);
 
       return `
         <div class="checkout-producto">
           <div>
-            <h4>${producto.nombre}</h4>
+            <h4>${item.nombre}</h4>
 
             <p>
-              Cantidad: ${producto.cantidad}
+              Cantidad: ${item.cantidad}
             </p>
           </div>
 
@@ -34,6 +49,7 @@ export function renderResumenCheckout(carrito) {
     .join("");
 
   const envio = subtotal * 0.01;
+
   const total = subtotal + envio;
 
   return `
@@ -41,22 +57,32 @@ export function renderResumenCheckout(carrito) {
       ${productosHTML}
     </div>
 
-    <div class="checkout-linea">
-      <span>Subtotal</span>
+    <div class="checkout-totales">
 
-      <strong>${formatearPrecio(subtotal)}</strong>
-    </div>
+      <div class="checkout-linea">
+        <span>Productos</span>
 
-    <div class="checkout-linea">
-      <span>Envío</span>
+        <strong>${cantidadTotal}</strong>
+      </div>
 
-      <strong>${formatearPrecio(envio)}</strong>
-    </div>
+      <div class="checkout-linea">
+        <span>Subtotal</span>
 
-    <div class="checkout-linea checkout-total">
-      <span>Total</span>
+        <strong>${formatearPrecio(subtotal)}</strong>
+      </div>
 
-      <strong>${formatearPrecio(total)}</strong>
+      <div class="checkout-linea">
+        <span>Envío</span>
+
+        <strong>${formatearPrecio(envio)}</strong>
+      </div>
+
+      <div class="checkout-linea checkout-total">
+        <span>Total</span>
+
+        <strong>${formatearPrecio(total)}</strong>
+      </div>
+
     </div>
   `;
 }
