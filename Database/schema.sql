@@ -49,3 +49,5 @@ CREATE TABLE direcciones (
   codigo_postal VARCHAR(20),
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario)
 );
+
+CREATE TABLE Ordenes 
