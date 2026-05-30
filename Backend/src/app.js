@@ -39,11 +39,10 @@ const pool = require("./config/db");
 app.get("/api/health", async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT 1 AS ok");
-    res.json(rows[0]);
+    res.json({ ok: true, database: "connected" });
   } catch (err) {
-    res
-      .status(500)
-      .json({ error: "DB no conecta", detail: String(err.message || err) });
+    console.error("HEALTH CHECK ERROR >>>", err);
+    res.status(500).json({ ok: false, error: "Servicio no disponible" });
   }
 });
 

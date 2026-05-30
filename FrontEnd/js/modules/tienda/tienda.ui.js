@@ -1,26 +1,29 @@
 import { formatearPrecio } from "../../utils/formatters.js";
+import { escaparHTML, obtenerRutaImagenSegura } from "../../utils/sanitizar.js";
 
 export function crearTarjetaProductoTienda(producto) {
+  const imagenSegura = obtenerRutaImagenSegura(producto.imagen);
+
   return `
-    <div class="producto-card" data-categoria="${producto.marca}">
+    <div class="producto-card" data-categoria="${escaparHTML(producto.marca)}">
       <div class="producto-imagen">
         <img
-          src="${producto.imagen}"
-          alt="${producto.marca} ${producto.nombre}"
+          src="${imagenSegura}"
+          alt="${escaparHTML(producto.marca)} ${escaparHTML(producto.nombre)}"
         />
       </div>
 
       <div class="producto-info">
-        <p class="marca">${producto.marca}</p>
-        <h3 class="nombre">${producto.nombre}</h3>
-        <p class="precio">${formatearPrecio(producto.precio)}</p>
+        <p class="marca">${escaparHTML(producto.marca)}</p>
+        <h3 class="nombre">${escaparHTML(producto.nombre)}</h3>
+        <p class="precio">${formatearPrecio(Number(producto.precio))}</p>
 
         <div class="memorias">
           <button class="chip">256GB</button>
           <button class="chip">512GB</button>
         </div>
 
-        <button class="btn-carrito" data-producto-id="${producto.id}">Agregar al carrito</button>
+        <button class="btn-carrito" data-producto-id="${escaparHTML(Number(producto.id))}">Agregar al carrito</button>
       </div>
     </div>
   `;

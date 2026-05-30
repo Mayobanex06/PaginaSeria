@@ -258,18 +258,18 @@ async function agregarUsuario(req, res) {
       return res.status(400).json({ ok: false, error: "Email no válido" });
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       return res.status(400).json({
         ok: false,
-        error: "La contraseña debe tener al menos 6 caracteres",
+        error: "La contraseña debe tener al menos 8 caracteres",
       });
     }
-
-    const passwordHash = await bcrypt.hash(password, 10);
 
     if (!ROLES_PERMITIDOS.includes(rol)) {
       return res.status(400).json({ ok: false, error: "Rol no permitido" });
     }
+
+    const passwordHash = await bcrypt.hash(password, 10);
 
     const [result] = await pool.query(
       "INSERT INTO usuarios (nombre, email, password, rol) VALUES (?, ?, ?, ?)",
