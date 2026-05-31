@@ -50,4 +50,31 @@ CREATE TABLE direcciones (
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario)
 );
 
-CREATE TABLE Ordenes 
+CREATE TABLE ordenes (
+id_orden INT AUTO_INCREMENT PRIMARY KEY,
+usuario_id INT NOT NULL,
+total DECIMAL (10,2) NOT NULL,
+direccion VARCHAR(255) NOT NULL,
+telefono VARCHAR(20) NOT NULL,
+metodo_pago VARCHAR(50) NOT NULL,
+estado ENUM(
+'Pendiente',
+'Pagado',
+'Enviado'
+) DEFAULT 'Pendiente',
+creada_en DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE orden_items (
+id_item INT AUTO_INCREMENT PRIMARY KEY,
+orden_id INT NOT NULL,
+producto_id INT NOT NULL,
+cantidad INT NOT NULL,
+precio DECIMAL(10,2) NOT NULL,
+FOREIGN KEY (orden_id)
+REFERENCES ordenes(id_orden)
+ON DELETE CASCADE,
+FOREIGN KEY (producto_id)
+REFERENCES productos(id_producto)
+ON DELETE CASCADE
+);
