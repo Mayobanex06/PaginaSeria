@@ -1,4 +1,4 @@
-import pool from "../config/db.js";
+const pool = require("../config/db.js");
 
 export async function finalizarCompra(req, res) {
   const usuarioId = req.userId;
