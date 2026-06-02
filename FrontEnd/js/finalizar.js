@@ -42,12 +42,40 @@ async function manejarFinalizarCompra(event) {
     const nota =
         document.getElementById("nota").value.trim();
 
+    const numeroTarjeta =
+        document.getElementById("numeroTarjeta").value.trim();
+
+    const fechaExpiracion =
+        document.getElementById("fechaExpiracion").value.trim();
+
+    const ccv =
+        document.getElementById("ccv").value.trim();
+
+
 
     if (!direccion || !telefono || !metodoPago) {
-        alert("Es necesesario completar los campos requeridos.");
-
+        alert("Es necesario completar todos los campos requeridos")
         return;
     }
+
+    if (metodoPago === "Tarjeta") {
+        if (
+            !numeroTarjeta ||
+            !fechaExpiracion ||
+            !ccv
+        ) {
+            alert("Completa todos los datos de la tarjeta.");
+
+            return;
+        }
+
+        if (ccv.length < 3 || isNaN(ccv)) {
+            alert("El CCV debe tener 3 números.");
+
+            return;
+        }
+    }
+
     const datosCompra = {
         direccion,
         telefono,
