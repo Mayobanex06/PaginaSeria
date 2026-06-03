@@ -1,119 +1,88 @@
 import {
-    obtenerCarritoFinalizar,
-    finalizarCompra,
+  obtenerCarritoFinalizar,
+  finalizarCompra,
 } from "./services/finalizar.service.js";
 
 import { renderResumenCheckout } from "./modules/finalizar/finalizar.ui.js";
 
 async function cargarResumen() {
-    try {
-        const data = await obtenerCarritoFinalizar();
+  try {
+    const data = await obtenerCarritoFinalizar();
 
-        console.log("DATA FINALIZAR >>>", data);
+    console.log("DATA FINALIZAR >>>", data);
 
-        const contenedorResumen =
-            document.getElementById("checkoutResumen");
+    const contenedorResumen = document.getElementById("checkoutResumen");
 
-        contenedorResumen.innerHTML =
-            renderResumenCheckout(data.carrito);
-
-    } catch (error) {
-        console.error("Error al cargar resumen", error);
-    }
+    contenedorResumen.innerHTML = renderResumenCheckout(data.carrito);
+  } catch (error) {
+    console.error("Error al cargar resumen", error);
+  }
 }
 
 cargarResumen();
 
-
 async function manejarFinalizarCompra(event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    const direccion =
-        document.getElementById("direccion").value.trim();
+  const direccion = document.getElementById("direccion").value.trim();
 
+  const telefono = document.getElementById("telefono").value.trim();
 
-    const telefono =
-        document.getElementById("telefono").value.trim();
+  const metodoPago = document.getElementById("metodoPago").value;
 
-    const metodoPago =
-        document.getElementById("metodoPago").value;
+  const nota = document.getElementById("nota").value.trim();
 
+  const numeroTarjeta = document.getElementById("numeroTarjeta").value.trim();
 
-    const nota =
-        document.getElementById("nota").value.trim();
+  const fechaExpiracion = document
+    .getElementById("fechaExpiracion")
+    .value.trim();
 
-    const numeroTarjeta =
-        document.getElementById("numeroTarjeta").value.trim();
+  const ccv = document.getElementById("ccv").value.trim();
 
-    const fechaExpiracion =
-        document.getElementById("fechaExpiracion").value.trim();
+  if (!direccion || !telefono || !metodoPago) {
+    alert("Es necesario completar todos los campos requeridos");
+    return;
+  }
 
-    const ccv =
-        document.getElementById("ccv").value.trim();
+  if (metodoPago === "Tarjeta") {
+    if (!numeroTarjeta || !fechaExpiracion || !ccv) {
+      alert("Completa todos los datos de la tarjeta.");
 
-
-
-    if (!direccion || !telefono || !metodoPago) {
-        alert("Es necesario completar todos los campos requeridos")
-        return;
+      return;
     }
 
-    if (metodoPago === "Tarjeta") {
-        if (
-            !numeroTarjeta ||
-            !fechaExpiracion ||
-            !ccv
-        ) {
-            alert("Completa todos los datos de la tarjeta.");
+    if (ccv.length < 3 || isNaN(ccv)) {
+      alert("El CCV debe tener 3 números.");
 
-            return;
-        }
-
-        if (ccv.length < 3 || isNaN(ccv)) {
-            alert("El CCV debe tener 3 números.");
-
-            return;
-        }
+      return;
     }
+  }
 
-    const datosCompra = {
-        direccion,
-        telefono,
-        metodoPago,
-        nota,
-    };
+  const datosCompra = {
+    direccion,
+    telefono,
+    metodoPago,
+    nota,
+  };
 
-    try {
-        const data =
-            await finalizarCompra(datosCompra);
+  try {
+    const data = await finalizarCompra(datosCompra);
 
-        alert(
-            data.mensaje ||
-            "La compra fue correctamente finalizada"
-        );
-    } catch (error) {
-        console.error(
-            "Error al finalizar la compra",
-        );
+    alert(data.mensaje || "La compra fue correctamente finalizada");
+  } catch (error) {
+    console.error("Error al finalizar la compra");
 
-
-        alert(
-            error.mesage ||
-            "Error al finalizar la compra"
-        );
-    }
+    alert(error.mesage || "Error al finalizar la compra");
+  }
 }
 
 function iniciarFinalizar() {
-    const formulario =
-        document.getElementById("checkoutForm");
+  const formulario = document.getElementById("checkoutForm");
 
-    if (formulario) {
-        formulario.addEventListener(
-            "submit",
-            manejarFinalizarCompra
-        );
-    }
+  if (formulario) {
+    formulario.addEventListener("submit", manejarFinalizarCompra);
+  }
 }
 
 iniciarFinalizar();
