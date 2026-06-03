@@ -69,8 +69,8 @@ async function manejarFinalizarCompra(event) {
             return;
         }
 
-        if (ccv.length < 3 || isNaN(ccv)) {
-            alert("El CCV debe tener 3 números.");
+        if (ccv.length !== 3 || isNaN(ccv)) {
+            alert("El CCV debe tener solo 3 numeros")
 
             return;
         }
