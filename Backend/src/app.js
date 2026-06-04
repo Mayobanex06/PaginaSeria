@@ -7,6 +7,7 @@ const helmet = require("helmet");
 
 const authMiddleware = require("./middlewares/auth.middleware");
 const adminMiddleware = require("./middlewares/admin.middleware");
+const validarOrigen = require("./middlewares/origin.middleware");
 
 const authRoutes = require("./routes/auth.routes");
 const tiendaRoutes = require("./routes/tienda.routes");
@@ -19,8 +20,13 @@ const app = express();
 
 app.use(helmet());
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "20kb" }));
+app.use(
+  express.urlencoded({
+    extended: true,
+    limit: "20kb",
+  }),
+);
 app.use(cookieParser());
 
 app.use(
@@ -29,6 +35,8 @@ app.use(
     credentials: true,
   }),
 );
+
+app.use(validarOrigen);
 
 app.get("/ping", (req, res) => {
   res.send("pong");
