@@ -1,12 +1,13 @@
 import { formatearPrecio } from "../../utils/formatters.js";
-import { escaparHTML, obtenerRutaImagenSegura } from "../../utils/sanitizar.js";
+import { escaparHTML, obtenerRutaImagenSegura, obtenerRutaImagenRespaldo } from "../../utils/sanitizar.js";
 
 export function crearTarjetaCarrito(carritoItem) {
   const imagenSegura = obtenerRutaImagenSegura(carritoItem.imagen);
+  const imagenRespaldo = obtenerRutaImagenRespaldo();
 
   return `<div class="carrito-item" data-producto-id="${escaparHTML(Number(carritoItem.producto_id))}">
     <div class="carrito-item-img">
-      <img src="${imagenSegura}" alt="${escaparHTML(carritoItem.nombre)}">
+      <img src="${imagenSegura}" alt="${escaparHTML(carritoItem.nombre)}" data-imagen-respaldo="${imagenRespaldo}" />
     </div>
 
     <div class="carrito-item-info">

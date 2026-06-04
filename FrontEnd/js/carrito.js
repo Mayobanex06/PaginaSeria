@@ -8,6 +8,7 @@ let carrito = [];
 const elementos = {
   carritoLista: document.getElementById("carritoLista"),
   carritoVacio: document.getElementById("carritoVacio"),
+  vaciarCarritoBtn: document.getElementById("vaciarCarritoBtn"),
   resumen: {
     cantidad: document.getElementById("resumenCantidad"),
     subtotal: document.getElementById("resumenSubtotal"),
@@ -35,6 +36,7 @@ registrarEventosCarrito({
   carritoLista: elementos.carritoLista,
   obtenerEstado: () => carrito,
   recargarCarrito: cargarCarrito,
+  vaciarCarritoBtn: elementos.vaciarCarritoBtn,
 });
 
 cargarCarrito();
