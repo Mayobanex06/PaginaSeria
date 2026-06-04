@@ -33,6 +33,17 @@ VALUES
 ('Xiaomi 13T Pro', 'Xiaomi', 'Smartphone Xiaomi 13T Pro', 28999.99, 6, '/assets/Imagenes/Productos/xiaomi_13t_pro.jpg', 'Smartphone', 1),
 ('Xiaomi 14 Ultra', 'Xiaomi', 'Smartphone Xiaomi 14 Ultra', 45999.99, 4, '/assets/Imagenes/Productos/xiaomi_14_ultra.png', 'Smartphone', 1);
 
+UPDATE productos
+SET imagen = CONCAT('/FrontEnd', imagen)
+WHERE imagen LIKE '/assets/%';
+
+UPDATE productos
+SET imagen = SUBSTRING_INDEX(
+  REPLACE(imagen, '\\', '/'),
+  '/',
+  -1
+);
+
 SELECT * FROM productos
 WHERE id_producto > 0; 
 

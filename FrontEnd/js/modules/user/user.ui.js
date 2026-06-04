@@ -1,9 +1,11 @@
+import { escaparHTML } from "../../utils/sanitizar.js";
+
 export function crearTarjetaUsuarioActivo(data) {
   return `
       <h4>Mi cuenta</h4>
-      <p><strong>Nombre:</strong> ${data.nombre}</p>
-      <p><strong>Correo:</strong> ${data.email}</p>
-      <p><strong>Rol:</strong> ${data.rol}</p>
+      <p><strong>Nombre:</strong> ${escaparHTML(data.nombre)}</p>
+      <p><strong>Correo:</strong> ${escaparHTML(data.email)}</p>
+      <p><strong>Rol:</strong> ${escaparHTML(data.rol)}</p>
       <button class="btn-user" id="logoutBtn">Cerrar sesión</button>
     `;
 }
