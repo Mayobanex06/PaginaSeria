@@ -4,6 +4,7 @@ const pool = require("../config/db");
 
 const COOKIE_NAME = "sid";
 const SALT_ROUNDS = 10;
+const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
 
 function emailValido(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -90,8 +91,7 @@ async function register(req, res) {
   }
 }
 
-function login(sessions) {
-  return async (req, res) => {
+async function login(req, res) {
     try {
       const { email, password } = req.body;
 
@@ -134,7 +134,7 @@ function login(sessions) {
         });
       }
 
-      if (user.estado !== 1) {
+      if (Number(user.estado) !== 1) {
         return res.status(403).json({
           ok: false,
           error: "Usuario inactivo",
@@ -142,11 +142,12 @@ function login(sessions) {
       }
 
       const sid = crypto.randomBytes(24).toString("hex");
+      const expiraEn = new Date(Date.now() + SESSION_DURATION_MS);
 
-      sessions[sid] = {
-        id_usuario: user.id_usuario,
-        expiresAt: Date.now() + 24 * 60 * 60 * 1000,
-      };
+      await pool.query(
+        "INSERT INTO sesiones (id_sesion, usuario_id, expira_en) VALUES (?, ?, ?)",
+        [sid, user.id_usuario, expiraEn],
+      );
 
       await pool.query(
         "UPDATE usuarios SET ultimo_login = NOW() WHERE id_usuario = ?",
@@ -157,11 +158,11 @@ function login(sessions) {
         httpOnly: true,
         sameSite: "lax",
         secure: process.env.NODE_ENV === "production",
-        maxAge: 24 * 60 * 60 * 1000,
+        maxAge: SESSION_DURATION_MS,
         path: "/",
       });
 
-      res.json({ ok: true });
+      return res.json({ ok: true });
     } catch (err) {
       console.error("LOGIN ERROR >>>", err);
       return res.status(500).json({
@@ -169,7 +170,6 @@ function login(sessions) {
         error: "Error interno del servidor",
       });
     }
-  };
 }
 
 async function me(req, res) {
@@ -191,12 +191,15 @@ async function me(req, res) {
   }
 }
 
-function logout(sessions) {
-  return (req, res) => {
-    const sid = req.cookies[COOKIE_NAME];
+async function logout(req, res) {
+  const sid = req.cookies?.[COOKIE_NAME];
 
+  try {
     if (sid) {
-      delete sessions[sid];
+      await pool.query(
+        "DELETE FROM sesiones WHERE id_sesion = ?",
+        [sid],
+      );
     }
 
     res.clearCookie(COOKIE_NAME, {
@@ -206,8 +209,22 @@ function logout(sessions) {
       path: "/",
     });
 
-    res.json({ ok: true });
-  };
+    return res.json({ ok: true });
+  } catch (error) {
+    console.error("LOGOUT ERROR >>>", error);
+
+    res.clearCookie(COOKIE_NAME, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+    });
+
+    return res.status(500).json({
+      ok: false,
+      error: "No se pudo cerrar la sesión completamente",
+    });
+  }
 }
 
 module.exports = {

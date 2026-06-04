@@ -11,56 +11,77 @@ function limpiarCookieSesion(res) {
   });
 }
 
-function authMiddleware(sessions) {
-  return async (req, res, next) => {
-    try {
-      const sid = req.cookies[COOKIE_NAME];
+async function invalidarSesion(sid, res, mensaje) {
+  await pool.query(
+    "DELETE FROM sesiones WHERE id_sesion = ?",
+    [sid],
+  );
 
-      if (!sid || !sessions[sid]) {
-        return res.status(401).json({
-          ok: false,
-          error: "No autenticado",
-        });
-      }
+  limpiarCookieSesion(res);
 
-      if (Date.now() > sessions[sid].expiresAt) {
-        delete sessions[sid];
-        limpiarCookieSesion(res);
+  return res.status(401).json({
+    ok: false,
+    error: mensaje,
+  });
+}
 
-        return res.status(401).json({
-          ok: false,
-          error: "Sesión expirada",
-        });
-      }
+async function authMiddleware(req, res, next) {
+  try {
+    const sid = req.cookies?.[COOKIE_NAME];
 
-      const userId = sessions[sid].id_usuario;
-
-      const [rows] = await pool.query(
-        "SELECT estado FROM usuarios WHERE id_usuario = ?",
-        [userId],
-      );
-
-      if (rows.length === 0 || Number(rows[0].estado) !== 1) {
-        delete sessions[sid];
-        limpiarCookieSesion(res);
-
-        return res.status(401).json({
-          ok: false,
-          error: "Sesión no válida",
-        });
-      }
-
-      req.userId = userId;
-      next();
-    } catch (error) {
-      console.error("AUTH MIDDLEWARE ERROR >>>", error);
-
-      return res.status(500).json({
+    if (!sid) {
+      return res.status(401).json({
         ok: false,
-        error: "Error interno del servidor",
+        error: "No autenticado",
       });
     }
-  };
+
+    const [rows] = await pool.query(
+      `SELECT
+        s.id_sesion,
+        s.usuario_id,
+        s.expira_en,
+        u.estado
+       FROM sesiones s
+       INNER JOIN usuarios u
+         ON s.usuario_id = u.id_usuario
+       WHERE s.id_sesion = ?`,
+      [sid],
+    );
+
+    if (rows.length === 0) {
+      limpiarCookieSesion(res);
+
+      return res.status(401).json({
+        ok: false,
+        error: "Sesión no válida",
+      });
+    }
+
+    const sesion = rows[0];
+
+    const sesionExpirada =
+      new Date(sesion.expira_en).getTime() <= Date.now();
+
+    if (sesionExpirada) {
+      return invalidarSesion(sid, res, "Sesión expirada");
+    }
+
+    if (Number(sesion.estado) !== 1) {
+      return invalidarSesion(sid, res, "Sesión no válida");
+    }
+
+    req.userId = Number(sesion.usuario_id);
+
+    next();
+  } catch (error) {
+    console.error("AUTH MIDDLEWARE ERROR >>>", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: "Error interno del servidor",
+    });
+  }
 }
 
 module.exports = authMiddleware;
