@@ -4,6 +4,7 @@ USE coretech_db;
 DROP TABLE IF EXISTS direcciones;
 DROP TABLE IF EXISTS carritos_items;
 DROP TABLE IF EXISTS productos;
+DROP TABLE IF EXISTS sesiones;
 DROP TABLE IF EXISTS usuarios;
 
 CREATE TABLE usuarios (
@@ -16,6 +17,25 @@ CREATE TABLE usuarios (
   ultimo_login DATETIME,
   creado_hace DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE sesiones (
+id_sesion CHAR(48) PRIMARY KEY,
+usuario_id INT NOT NULL,
+expira_en DATETIME NOT NULL,
+creada_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+	CONSTRAINT fk_sesiones_usuarios
+		FOREIGN KEY (usuario_id)
+		REFERENCES usuarios(id_usuario)
+		ON DELETE CASCADE
+);
+
+CREATE INDEX idx_sesiones_usuarios
+ON sesiones(usuario_id);
+
+CREATE INDEX idx_sesiones_expiracion
+ON sesiones(expira_en);
+
 
 CREATE TABLE productos (
   id_producto INT AUTO_INCREMENT PRIMARY KEY,

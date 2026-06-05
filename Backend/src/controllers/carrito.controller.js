@@ -7,11 +7,7 @@ function validarProductoId(valor) {
 
   const producto_id = Number(valor);
 
-  if (Number.isNaN(producto_id)) {
-    return { ok: false, status: 400, error: "ID de producto inválido (NaN)" };
-  }
-
-  if (producto_id <= 0) {
+  if (!Number.isInteger(producto_id) || producto_id <= 0) {
     return { ok: false, status: 400, error: "ID de producto inválido" };
   }
 
@@ -147,10 +143,10 @@ async function actualizarCantidad(req, res) {
     const { producto_id } = validacion;
     const cantidad = Number(req.body.cantidad);
 
-    if (Number.isNaN(cantidad) || cantidad < 1) {
-      return res
-        .status(400)
-        .json({ error: "La cantidad debe ser un número mayor o igual a 1" });
+    if (!Number.isInteger(cantidad) || cantidad < 1) {
+      return res.status(400).json({
+        error: "La cantidad debe ser un número entero mayor o igual a 1",
+      });
     }
 
     const producto = await buscarProducto(producto_id);
