@@ -21,6 +21,29 @@ async function cargarResumen() {
 
 cargarResumen();
 
+const fechaExpiracionInput =
+  document.getElementById("fechaExpiracion");
+
+if (fechaExpiracionInput) {
+  fechaExpiracionInput.addEventListener("input", (e) => {
+    let valor = e.target.value.replace(/\D/g, "");
+
+    if (valor.length > 4) {
+      valor = valor.slice(0, 4);
+    }
+
+    if (valor.length >= 3) {
+      valor =
+        valor.slice(0, 2) +
+        "/" +
+        valor.slice(2);
+    }
+
+    e.target.value = valor;
+  });
+}
+
+
 async function manejarFinalizarCompra(event) {
   event.preventDefault();
 
@@ -52,7 +75,7 @@ async function manejarFinalizarCompra(event) {
       return;
     }
 
-    if (ccv.length < 3 || isNaN(ccv)) {
+    if (ccv.length !== 3 || isNaN(ccv)) {
       alert("El CCV debe tener 3 números.");
     }
 
