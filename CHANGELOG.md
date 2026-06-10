@@ -11,6 +11,7 @@
 
 - Modificacion importante realizada.
 - El archivo Finalizar.js fue arreglado de un error que no dejaba vaciar el carrito
+- Se modifico el finalizar.services.js por motivos de que el carrito no funcionaba
 
 ### Corregido
 
