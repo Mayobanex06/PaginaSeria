@@ -3,15 +3,21 @@
 ## AAAA-MM-DD
 
 ### Agregado
+
 - Nueva funcionalidad o documento agregado.
+  -Css arreglado nuevo estilo del proyecto
 
 ### Cambiado
+
 - Modificacion importante realizada.
+- El archivo Finalizar.js fue arreglado de un error que no dejaba vaciar el carrito
 
 ### Corregido
+
 - Error corregido.
 
 ### Pendiente
+
 - Algo que falta por completar.
 
 # Historial de cambios
@@ -104,5 +110,3 @@ El formato recomendado es separar los avances por fecha y clasificarlos como agr
 - Añadir ejemplos reales de respuestas API.
 - Documentar despliegue cuando el proyecto este publicado.
 - Documentar flujo completo de compra cuando este terminado.
-
-

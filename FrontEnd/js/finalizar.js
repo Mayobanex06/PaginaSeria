@@ -104,5 +104,5 @@ async function manejarFinalizarCompra(event) {
       formulario.addEventListener("submit", manejarFinalizarCompra);
     }
   }
+  iniciarFinalizar();
 }
-iniciarFinalizar();
