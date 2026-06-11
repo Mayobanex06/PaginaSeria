@@ -20,5 +20,5 @@ export function eliminarProducto(id) {
 }
 
 export function vaciarCarrito() {
-  return apiDelete("/carrito/Vaciar");
+  return apiDelete("/carrito/vaciar");
 }

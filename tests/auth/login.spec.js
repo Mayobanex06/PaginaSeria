@@ -6,7 +6,7 @@ test("login admin exitoso redirige al inicio", async ({ page }) => {
   await page.goto(`${FRONTEND_ORIGIN}/FrontEnd/pages/login.html`);
 
   await page.fill('input[name="email"]', "admin_test@hotmail.com");
-  await page.fill('input[name="password"]', "123456");
+  await page.fill('input[name="password"]', "12345678");
 
   await page.click('button[type="submit"]');
 
