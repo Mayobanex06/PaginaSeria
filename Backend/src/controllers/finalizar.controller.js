@@ -1,117 +1,52 @@
-import pool from "../config/db.js";
+const pool = require("../config/db.js");
 
-export async function finalizarCompra(req, res) {
-  const usuarioId = req.userId;
+async function finalizarCompra(req, res) {
 
-  const { direccion, telefono, metodoPago, nota } = req.body;
-
-  if (!direccion || !telefono || !metodoPago) {
-    return res.status(400).json({
-      ok: false,
-      error: "Faltan datos requeridos",
-    });
-  }
-
-  const connection = await pool.getConnection();
+  const userId = req.userId;
 
   try {
-    await connection.beginTransaction();
-
-    const [carrito] = await connection.query(
-      `
-      SELECT 
-        ci.producto_id,
-        ci.cantidad,
-        p.precio,
-        p.stock
+    const [carritoItems] = await pool.query(
+      `SELECT 
+      ci.id_carrito,
+      ci.cantidad,
+      ci.producto_id,
+      p.estado,
+      p.stock
       FROM carrito_items ci
-      INNER JOIN productos p
-        ON ci.producto_id = p.id_producto
-      WHERE ci.usuario_id = ?
-      `,
-      [usuarioId],
+      JOIN productos p ON ci.producto_id = p.id_producto
+      WHERE ci.usuario_id = ?`,
+      [userId],
     );
 
-    if (carrito.length === 0) {
-      await connection.rollback();
-
+    if (carritoItems.length === 0) {
       return res.status(400).json({
         ok: false,
         error: "El carrito está vacío",
       });
     }
 
-    for (const item of carrito) {
-      if (item.cantidad > item.stock) {
-        await connection.rollback();
-
-        return res.status(400).json({
-          ok: false,
-          error: "Stock insuficiente para uno o más productos",
-        });
-      }
+    if (carritoItems.some((item) => item.estado !== "Activo")) {
+      return res.status(400).json({
+        ok: false,
+        error: "Uno o más productos en el carrito no están disponibles",
+      });
     }
 
-    const total = carrito.reduce((acum, item) => {
-      return acum + Number(item.precio) * Number(item.cantidad);
-    }, 0);
-
-    const [ordenResult] = await connection.query(
-      `
-      INSERT INTO ordenes
-        (usuario_id, total, direccion, telefono, metodo_pago, nota)
-      VALUES (?, ?, ?, ?, ?, ?)
-      `,
-      [usuarioId, total, direccion, telefono, metodoPago, nota || null],
-    );
-
-    const ordenId = ordenResult.insertId;
-
-    for (const item of carrito) {
-      await connection.query(
-        `
-        INSERT INTO orden_items
-          (orden_id, producto_id, cantidad, precio)
-        VALUES (?, ?, ?, ?)
-        `,
-        [ordenId, item.producto_id, item.cantidad, item.precio],
-      );
-
-      await connection.query(
-        `
-        UPDATE productos
-        SET stock = stock - ?
-        WHERE id_producto = ?
-        `,
-        [item.cantidad, item.producto_id],
-      );
+    if (carritoItems.some((item) => item.stock < item.cantidad)) {
+      return res.status(400).json({
+        ok: false,
+        error: "Uno o más productos en el carrito no tienen suficiente stock",
+      });
     }
 
-    await connection.query(
-      `
-      DELETE FROM carrito_items
-      WHERE usuario_id = ?
-      `,
-      [usuarioId],
-    );
+      
 
-    await connection.commit();
+    
 
-    return res.json({
-      ok: true,
-      mensaje: "Compra finalizada correctamente",
-      ordenId,
-    });
   } catch (error) {
-    await connection.rollback();
-
-    console.error("ERROR FINALIZAR COMPRA >>>", error);
-
     return res.status(500).json({
       ok: false,
-      error: "Error al finalizar la compra",
+      error: "Error interno del servidor",
     });
-  } finally {
-    connection.release();
   }
 }

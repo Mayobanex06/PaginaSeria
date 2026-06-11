@@ -77,6 +77,12 @@ function registrarEventosUserCard() {
       window.location.href = "register.html";
       return;
     }
+
+    if (actionBtn?.dataset.action === "configuration") {
+      window.location.href = "cuenta-config.html";
+      return;
+    }
+    
   });
 }
 

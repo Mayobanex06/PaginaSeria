@@ -5,6 +5,8 @@ import {
 
 import { renderResumenCheckout } from "./modules/finalizar/finalizar.ui.js";
 
+// Parte adecuada del finalizar.js 
+
 async function cargarResumen() {
   try {
     const data = await obtenerCarritoFinalizar();
@@ -20,6 +22,8 @@ async function cargarResumen() {
 }
 
 cargarResumen();
+
+// 1ra Parte a modularizar: (desconocido).js
 
 const fechaExpiracionInput =
   document.getElementById("fechaExpiracion");
@@ -43,6 +47,8 @@ if (fechaExpiracionInput) {
   });
 }
 
+
+// 2da Parte a modularizar: finalizar.events.js
 
 async function manejarFinalizarCompra(event) {
   event.preventDefault();
@@ -96,6 +102,8 @@ async function manejarFinalizarCompra(event) {
       alert(error.mesage || "Error al finalizar la compra");
     }
   }
+
+  
 
   function iniciarFinalizar() {
     const formulario = document.getElementById("checkoutForm");

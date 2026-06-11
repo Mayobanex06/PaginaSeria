@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configuración de cuenta</title>
+
+    <link rel="icon" type="image/png" href="Imagenes/faviinco.png" />
+    <link rel="stylesheet" href="../styles/cuenta-config.css" />
+    <link rel="stylesheet" href="../styles/general.css" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body class="body-configuracion">
+    <header class="header-principal">
+      <div class="header-logo" data-aos="fade-right" data-aos-duration="1000">
+        <img
+          src="../assets/Imagenes/85e91e0a-7280-4aea-bb42-c9836994955c.png"
+          alt="CoreTech Logo"
+          class="logo-imagen"
+        />
+        <span class="logo-texto">CORETECH</span>
+      </div>
+      <nav
+        class="menu-navegacion"
+        data-aos="fade-down"
+        data-aos-duration="1000"
+      >
+        <a href="index.html" class="menu-enlace">Inicio</a>
+        <a href="tienda.html" class="menu-enlace">Tienda</a>
+        <a href="about-us.html" class="menu-enlace">Sobre nosotros</a>
+        <a href="contacto.html" class="menu-enlace">Contacto</a>
+      </nav>
+      <div class="header-iconos" data-aos="fade-left" data-aos-duration="1000">
+        <div class="user-menu">
+          <button id="userBtn" class="user-btn" type="button">
+            <i class="fa-solid fa-user"></i>
+          </button>
+
+          <div id="userCard" class="user-card oculto">
+            <p>Cargando...</p>
+          </div>
+        </div>
+
+        <a href="">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </a>
+
+        <a href="carrito.html">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+      </div>
+    </header>
+
+    <main class="configuracion-main">
+      <section class="configuracion-hero">
+        <div>
+          <p class="configuracion-etiqueta">Mi cuenta</p>
+          <h1>Configuración de cuenta</h1>
+          <p>
+            Administra tus datos personales, seguridad, dirección de envío y
+            preferencias de compra.
+          </p>
+        </div>
+      </section>
+
+      <section class="configuracion-layout">
+        <aside class="configuracion-menu">
+          <button class="configuracion-opcion" data-seccion="perfil">
+            <i class="fa-solid fa-user"></i>
+            Perfil
+          </button>
+
+          <button class="configuracion-opcion" data-seccion="seguridad">
+            <i class="fa-solid fa-lock"></i>
+            Seguridad
+          </button>
+
+          <button class="configuracion-opcion" data-seccion="direccion">
+            <i class="fa-solid fa-location-dot"></i>
+            Dirección
+          </button>
+
+          <button class="configuracion-opcion" data-seccion="pagos">
+            <i class="fa-solid fa-credit-card"></i>
+            Pagos
+          </button>
+
+          <button class="configuracion-opcion cerrar" id="btn-cerrar-sesion">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Cerrar sesión
+          </button>
+        </aside>
+
+        <section class="configuracion-panel" id="panel-configuracion">
+          
+        </section>
+      </section>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+    <script type="module" src="../js/user.js"></script>
+    <script type="module" src="../js/cuenta-config.js"></script>
+  </body>
+</html>

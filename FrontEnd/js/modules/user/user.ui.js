@@ -6,6 +6,7 @@ export function crearTarjetaUsuarioActivo(data) {
       <p><strong>Nombre:</strong> ${escaparHTML(data.nombre)}</p>
       <p><strong>Correo:</strong> ${escaparHTML(data.email)}</p>
       <p><strong>Rol:</strong> ${escaparHTML(data.rol)}</p>
+      <button class="btn-user-sec" data-action="configuration">Ajustes</button>
       <button class="btn-user" id="logoutBtn">Cerrar sesión</button>
     `;
 }

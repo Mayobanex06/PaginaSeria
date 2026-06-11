@@ -1,7 +1,10 @@
 CREATE DATABASE IF NOT EXISTS coretech_db;
 USE coretech_db;
 
-DROP TABLE IF EXISTS direcciones;
+DROP TABLE IF EXISTS compra_items;
+DROP TABLE IF EXISTS compras;
+DROP TABLE IF EXISTS pagos;
+DROP TABLE IF EXISTS direcciones_envio;
 DROP TABLE IF EXISTS carritos_items;
 DROP TABLE IF EXISTS productos;
 DROP TABLE IF EXISTS sesiones;
@@ -60,41 +63,61 @@ CREATE TABLE carrito_items (
   FOREIGN KEY (producto_id) REFERENCES productos(id_producto) ON DELETE CASCADE
 );
 
-CREATE TABLE direcciones (
+CREATE TABLE compras (
+  id_compra INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT NOT NULL,
+  direccion_id INT NOT NULL,
+  subtotal DECIMAL(10,2) NOT NULL,
+  costo_envio DECIMAL(10,2) NOT NULL DEFAULT 0,
+  total DECIMAL(10,2) NOT NULL,
+  estado ENUM('pendiente_pago', 'pagada', 'enviada', 'entregada', 'cancelada') 
+    NOT NULL DEFAULT 'pendiente_pago',
+  creada_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario),
+  FOREIGN KEY (direccion_id) REFERENCES direcciones_envio(id_direccion)
+);
+
+CREATE TABLE compra_items (
+  id_item INT AUTO_INCREMENT PRIMARY KEY,
+  compra_id INT NOT NULL,
+  producto_id INT NOT NULL,
+  nombre_producto VARCHAR(150) NOT NULL,
+  precio_unitario DECIMAL(10,2) NOT NULL,
+  cantidad INT NOT NULL,
+  subtotal DECIMAL(10,2) NOT NULL,
+
+  FOREIGN KEY (compra_id) REFERENCES compras(id_compra) ON DELETE CASCADE,
+  FOREIGN KEY (producto_id) REFERENCES productos(id_producto)
+);
+
+CREATE TABLE pagos (
+  id_pago INT AUTO_INCREMENT PRIMARY KEY,
+  compra_id INT NOT NULL,
+  metodo_pago ENUM('tarjeta', 'paypal', 'transferencia') NOT NULL,
+  estado_pago ENUM('pendiente', 'aprobado', 'rechazado', 'reembolsado') 
+    NOT NULL DEFAULT 'pendiente',
+  monto DECIMAL(10,2) NOT NULL,
+  referencia_pago VARCHAR(150),
+  fecha_pago DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (compra_id) REFERENCES compras(id_compra) ON DELETE CASCADE
+);
+
+CREATE TABLE direcciones_envio (
   id_direccion INT AUTO_INCREMENT PRIMARY KEY,
   usuario_id INT NOT NULL,
-  direccion VARCHAR(255),
-  ciudad VARCHAR(50),
-  pais VARCHAR(50),
-  codigo_postal VARCHAR(20),
-  FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario)
+  nombre_recibe VARCHAR(100) NOT NULL,
+  telefono VARCHAR(20) NOT NULL,
+  provincia VARCHAR(80) NOT NULL,
+  municipio VARCHAR(80) NOT NULL,
+  sector VARCHAR(100) NOT NULL,
+  direccion_detallada VARCHAR(255) NOT NULL,
+  referencia VARCHAR(255),
+  es_principal TINYINT(1) DEFAULT 0,
+  creada_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
 );
 
-CREATE TABLE ordenes (
-id_orden INT AUTO_INCREMENT PRIMARY KEY,
-usuario_id INT NOT NULL,
-total DECIMAL (10,2) NOT NULL,
-direccion VARCHAR(255) NOT NULL,
-telefono VARCHAR(20) NOT NULL,
-metodo_pago VARCHAR(50) NOT NULL,
-estado ENUM(
-'Pendiente',
-'Pagado',
-'Enviado'
-) DEFAULT 'Pendiente',
-creada_en DATETIME DEFAULT CURRENT_TIMESTAMP
-);
 
-CREATE TABLE orden_items (
-id_item INT AUTO_INCREMENT PRIMARY KEY,
-orden_id INT NOT NULL,
-producto_id INT NOT NULL,
-cantidad INT NOT NULL,
-precio DECIMAL(10,2) NOT NULL,
-FOREIGN KEY (orden_id)
-REFERENCES ordenes(id_orden)
-ON DELETE CASCADE,
-FOREIGN KEY (producto_id)
-REFERENCES productos(id_producto)
-ON DELETE CASCADE
-);
