@@ -1,5 +1,5 @@
 import { mostrarPanelCuentaConfig } from "./modules/cuenta-config/cuenta-config.navigation.js";
-import { registrarEventosCuentaConfig } from "./modules/cuenta-config/cuenta-config.events.js";
+import { registrarEventosCuentaConfig} from "./modules/cuenta-config/cuenta-config.events.js";
 
 const elementos = {
     botones: document.querySelectorAll(".configuracion-opcion"),

@@ -23,13 +23,17 @@ async function obtenerProductosTienda(req, res) {
       precio: Number(producto.precio),
       imagen: producto.imagen,
       categoria: producto.categoria,
-      stock: producto.stock,
+      stock: Number(producto.stock),
     }));
 
-    res.json({ ok: true, productos });
+    return res.json({
+      ok: true,
+      productos,
+    });
   } catch (error) {
     console.error("Error productos >>>", error);
-    res.status(500).json({
+
+    return res.status(500).json({
       ok: false,
       error: "Error al obtener productos",
     });

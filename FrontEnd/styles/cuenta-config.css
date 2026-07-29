@@ -182,10 +182,9 @@
 }
 
 .configuracion-acciones {
-  display: flex;
-  justify-content: flex-end;
-  gap: 14px;
-  margin-top: 28px;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
 }
 
 .btn-config-principal,

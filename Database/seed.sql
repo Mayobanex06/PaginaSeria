@@ -33,6 +33,11 @@ VALUES
 ('Xiaomi 13T Pro', 'Xiaomi', 'Smartphone Xiaomi 13T Pro', 28999.99, 6, '/assets/Imagenes/Productos/xiaomi_13t_pro.jpg', 'Smartphone', 1),
 ('Xiaomi 14 Ultra', 'Xiaomi', 'Smartphone Xiaomi 14 Ultra', 45999.99, 4, '/assets/Imagenes/Productos/xiaomi_14_ultra.png', 'Smartphone', 1);
 
+INSERT INTO productos
+(nombre, marca, descripcion, precio, stock, imagen, categoria, estado)
+VALUES
+('Xiaomi 14 Ultra', 'Xiaomi', 'Smartphone Xiaomi 14 Ultra', 45999.99, 4, '/assets/Imagenes/Productos/xiaomi_14_ultra.png', 'Smartphone', 1);
+
 UPDATE productos
 SET imagen = CONCAT('/FrontEnd', imagen)
 WHERE imagen LIKE '/assets/%';
@@ -49,3 +54,4 @@ WHERE id_producto > 0;
 
 SELECT * FROM carrito_items
 WHERE id_item > 0; 
+

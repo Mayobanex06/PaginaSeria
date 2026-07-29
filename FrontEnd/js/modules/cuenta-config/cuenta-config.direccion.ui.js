@@ -21,8 +21,7 @@ export function crearUIDireccion(dataDireccion){
       <label class="campo">
         <span class="campo-label">Nombre de quien recibe</span>
         <input
-          id="nombreRe
-ceptor"
+          id="nombreReceptor"
           class="campo-input"
           type="text"
           placeholder="Nombre completo"
@@ -68,17 +67,6 @@ ceptor"
           class="campo-input"
           type="text"
           value="${escaparHTML(dataDireccion.sector)}"
-        />
-      </label>
-
-      <label class="campo">
-        <span class="campo-label">Código Postal</span>
-        <input
-          id="codigoPostal"
-          class="campo-input"
-          type="text"
-          placeholder="Opcional"
-          value="${escaparHTML(dataDireccion.codigoPostal)}"
         />
       </label>
 

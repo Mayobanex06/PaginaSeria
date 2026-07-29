@@ -1,11 +1,11 @@
 import { apiGet, apiPost, apiPatch } from "../api.js";
 
 export async function obtenerPerfil() {
-    return await apiGet("/me");
+    return await apiGet("/cuenta-config/perfil/obtener");
 }
 
 export async function actualizarPerfil(data){
-    return await apiPatch("/cuenta-config/perfil-actualizar", data);
+    return await apiPatch("/cuenta-config/perfil/actualizar", data);
 }
 
 export async function cambiarPassword(data){
@@ -13,11 +13,11 @@ export async function cambiarPassword(data){
 }
 
 export async function obtenerDireccion(){
-    return await apiGet("/cuenta-config/direccion");
+    return await apiGet("/cuenta-config/direccion/obtener");
 }
 
 export async function agregarDireccion(data){
-    return await apiPost("/cuenta-config/direccion-agregar", data);
+    return await apiPost("/cuenta-config/direccion/agregar", data);
 }
 
 export async function actualizarDireccion(data){

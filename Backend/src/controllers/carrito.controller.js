@@ -1,17 +1,33 @@
 const pool = require("../config/db");
 
+const {
+  obtenerIdValido,
+  enteroMayorOIgualAUno,
+} = require("../utils/validators");
+
 function validarProductoId(valor) {
   if (valor === undefined) {
-    return { ok: false, status: 400, error: "Faltan datos" };
+    return {
+      ok: false,
+      status: 400,
+      error: "Faltan datos",
+    };
   }
 
-  const producto_id = Number(valor);
+  const producto_id = obtenerIdValido(valor);
 
-  if (!Number.isInteger(producto_id) || producto_id <= 0) {
-    return { ok: false, status: 400, error: "ID de producto inválido" };
+  if (!producto_id) {
+    return {
+      ok: false,
+      status: 400,
+      error: "ID de producto inválido",
+    };
   }
 
-  return { ok: true, producto_id };
+  return {
+    ok: true,
+    producto_id,
+  };
 }
 
 async function buscarProducto(producto_id) {
@@ -30,22 +46,30 @@ async function agregarAlCarrito(req, res) {
     const validacion = validarProductoId(req.body.producto_id);
 
     if (!validacion.ok) {
-      return res.status(validacion.status).json({ error: validacion.error });
+      return res.status(validacion.status).json({
+        error: validacion.error,
+      });
     }
 
     const { producto_id } = validacion;
     const producto = await buscarProducto(producto_id);
 
     if (!producto) {
-      return res.status(404).json({ error: "Producto no encontrado" });
+      return res.status(404).json({
+        error: "Producto no encontrado",
+      });
     }
 
-    if (producto.estado === 0) {
-      return res.status(400).json({ error: "Producto no disponible" });
+    if (Number(producto.estado) === 0) {
+      return res.status(400).json({
+        error: "Producto no disponible",
+      });
     }
 
-    if (producto.stock <= 0) {
-      return res.status(400).json({ error: "Producto sin stock" });
+    if (Number(producto.stock) <= 0) {
+      return res.status(400).json({
+        error: "Producto sin stock",
+      });
     }
 
     const [items] = await pool.query(
@@ -62,9 +86,9 @@ async function agregarAlCarrito(req, res) {
         [req.userId, producto_id],
       );
     } else {
-      const nuevaCantidad = items[0].cantidad + 1;
+      const nuevaCantidad = Number(items[0].cantidad) + 1;
 
-      if (nuevaCantidad > producto.stock) {
+      if (nuevaCantidad > Number(producto.stock)) {
         return res.status(400).json({
           error: "No puedes agregar más unidades de este producto al carrito",
         });
@@ -84,7 +108,10 @@ async function agregarAlCarrito(req, res) {
     });
   } catch (error) {
     console.error("Error agregar al carrito >>>", error);
-    return res.status(500).json({ error: "Error al agregar al carrito" });
+
+    return res.status(500).json({
+      error: "Error al agregar al carrito",
+    });
   }
 }
 
@@ -124,11 +151,14 @@ async function obtenerCarrito(req, res) {
 
     return res.status(200).json({
       ok: true,
-      carrito: carrito,
+      carrito,
     });
   } catch (error) {
     console.error("Error obtener carrito >>>", error);
-    return res.status(500).json({ error: "Error al obtener el carrito" });
+
+    return res.status(500).json({
+      error: "Error al obtener el carrito",
+    });
   }
 }
 
@@ -137,13 +167,15 @@ async function actualizarCantidad(req, res) {
     const validacion = validarProductoId(req.params.productoId);
 
     if (!validacion.ok) {
-      return res.status(validacion.status).json({ error: validacion.error });
+      return res.status(validacion.status).json({
+        error: validacion.error,
+      });
     }
 
     const { producto_id } = validacion;
     const cantidad = Number(req.body.cantidad);
 
-    if (!Number.isInteger(cantidad) || cantidad < 1) {
+    if (!enteroMayorOIgualAUno(cantidad)) {
       return res.status(400).json({
         error: "La cantidad debe ser un número entero mayor o igual a 1",
       });
@@ -152,14 +184,18 @@ async function actualizarCantidad(req, res) {
     const producto = await buscarProducto(producto_id);
 
     if (!producto) {
-      return res.status(404).json({ error: "Producto no encontrado" });
+      return res.status(404).json({
+        error: "Producto no encontrado",
+      });
     }
 
-    if (producto.estado === 0) {
-      return res.status(400).json({ error: "Producto no disponible" });
+    if (Number(producto.estado) === 0) {
+      return res.status(400).json({
+        error: "Producto no disponible",
+      });
     }
 
-    if (cantidad > producto.stock) {
+    if (cantidad > Number(producto.stock)) {
       return res.status(400).json({
         error: "La cantidad solicitada supera el stock disponible",
       });
@@ -173,9 +209,9 @@ async function actualizarCantidad(req, res) {
     );
 
     if (items.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "Producto no encontrado en el carrito" });
+      return res.status(404).json({
+        error: "Producto no encontrado en el carrito",
+      });
     }
 
     await pool.query(
@@ -191,7 +227,10 @@ async function actualizarCantidad(req, res) {
     });
   } catch (error) {
     console.error("Error actualizar cantidad >>>", error);
-    return res.status(500).json({ error: "Error al actualizar la cantidad" });
+
+    return res.status(500).json({
+      error: "Error al actualizar la cantidad",
+    });
   }
 }
 
@@ -200,7 +239,9 @@ async function eliminarDelCarrito(req, res) {
     const validacion = validarProductoId(req.params.productoId);
 
     if (!validacion.ok) {
-      return res.status(validacion.status).json({ error: validacion.error });
+      return res.status(validacion.status).json({
+        error: validacion.error,
+      });
     }
 
     const { producto_id } = validacion;
@@ -213,9 +254,9 @@ async function eliminarDelCarrito(req, res) {
     );
 
     if (rows.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "Producto no encontrado en el carrito" });
+      return res.status(404).json({
+        error: "Producto no encontrado en el carrito",
+      });
     }
 
     await pool.query(
@@ -230,7 +271,10 @@ async function eliminarDelCarrito(req, res) {
     });
   } catch (error) {
     console.error("Error eliminar del carrito >>>", error);
-    return res.status(500).json({ error: "Error al eliminar del carrito" });
+
+    return res.status(500).json({
+      error: "Error al eliminar del carrito",
+    });
   }
 }
 
@@ -248,7 +292,10 @@ async function vaciarCarrito(req, res) {
     });
   } catch (error) {
     console.error("Error vaciar carrito >>>", error);
-    return res.status(500).json({ error: "Error al vaciar el carrito" });
+
+    return res.status(500).json({
+      error: "Error al vaciar el carrito",
+    });
   }
 }
 

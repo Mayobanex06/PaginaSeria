@@ -4,6 +4,7 @@ import { renderizarPerfil } from "./cuenta-config.perfil.ui.js";
 import { renderizarDireccion } from "./cuenta-config.direccion.ui.js";
 import { renderizarPagos } from "./cuenta-config.pagos.ui.js";
 import { renderizarSeguridad } from "./cuenta-config.seguridad.ui.js";
+import { registrarActualizarPerfil } from "./cuenta-config.events.js";
 
 export async function mostrarPanelCuentaConfig({seccion, contenedor, botones}){
     botones.forEach((boton) => {
@@ -16,13 +17,23 @@ export async function mostrarPanelCuentaConfig({seccion, contenedor, botones}){
 
     if (seccion === "perfil") {
         const perfil = await obtenerPerfil();
-        renderizarPerfil(contenedor, perfil);
+        renderizarPerfil(contenedor, perfil.perfil);
+
+        const formulario = document.getElementById("form-perfil");
+        const inputs = {
+            inputNombre: formulario.querySelector("#input-nombre"),
+            inputEmail: formulario.querySelector("#input-email"),
+            inputRol: formulario.querySelector("#input-rol"),
+        };
+
+        registrarActualizarPerfil(formulario, inputs);
+        
         return;
     }
 
     if (seccion === "direccion") {
         const direccion = await obtenerDireccion();
-        renderizarDireccion(contenedor, direccion);
+        renderizarDireccion(contenedor, direccion.direccion);
         return;
     }
 

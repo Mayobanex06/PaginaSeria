@@ -1,38 +1,45 @@
 const pool = require("../config/db");
 const bcrypt = require("bcrypt");
 
+const {
+  normalizarTexto,
+  normalizarEmail,
+  emailValido,
+  passwordValida,
+  obtenerIdValido,
+  numeroMayorQueCero,
+  enteroMayorOIgualACero,
+  obtenerEstadoValido,
+  valorPermitido,
+} = require("../utils/validators");
+
 const MARCAS_PERMITIDAS = ["Samsung", "Xiaomi", "Apple"];
 const ROLES_PERMITIDOS = ["Admin", "User"];
 
-function idValido(id) {
-  const idNumero = Number(id);
-  return Number.isInteger(idNumero) && idNumero > 0;
-}
-
 function validarProductoAdmin({ nombre, marca, precio, stock, estado }) {
-  const nombreLimpio = nombre?.trim();
-  const marcaLimpia = marca?.trim();
+  const nombreLimpio = normalizarTexto(nombre);
+  const marcaLimpia = normalizarTexto(marca);
   const precioNumero = Number(precio);
   const stockNumero = Number(stock);
-  const estadoNumero = Number(estado);
+  const estadoNumero = obtenerEstadoValido(estado);
 
   if (!nombreLimpio || nombreLimpio.length < 2) {
     return { error: "El nombre del producto no es válido" };
   }
 
-  if (!MARCAS_PERMITIDAS.includes(marcaLimpia)) {
+  if (!valorPermitido(marcaLimpia, MARCAS_PERMITIDAS)) {
     return { error: "La marca no es válida" };
   }
 
-  if (Number.isNaN(precioNumero) || precioNumero <= 0) {
+  if (!numeroMayorQueCero(precio)) {
     return { error: "El precio debe ser mayor que 0" };
   }
 
-  if (!Number.isInteger(stockNumero) || stockNumero < 0) {
+  if (!enteroMayorOIgualACero(stock)) {
     return { error: "El stock debe ser un número entero mayor o igual a 0" };
   }
 
-  if (![0, 1].includes(estadoNumero)) {
+  if (estadoNumero === null) {
     return { error: "El estado no es válido" };
   }
 
@@ -47,12 +54,11 @@ function validarProductoAdmin({ nombre, marca, precio, stock, estado }) {
   };
 }
 
-function emailValido(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
 async function accesoAdmin(req, res) {
-  res.json({ ok: true, mensaje: "Acceso permitido a admin" });
+  return res.json({
+    ok: true,
+    mensaje: "Acceso permitido a admin",
+  });
 }
 
 async function obtenerProductosAdmin(req, res) {
@@ -78,14 +84,15 @@ async function obtenerProductosAdmin(req, res) {
       precio: Number(producto.precio),
       imagen: producto.imagen,
       categoria: producto.categoria,
-      stock: producto.stock,
-      estado: producto.estado,
+      stock: Number(producto.stock),
+      estado: Number(producto.estado),
     }));
 
-    res.json({ ok: true, productos });
+    return res.json({ ok: true, productos });
   } catch (error) {
     console.error("Error productos >>>", error);
-    res.status(500).json({
+
+    return res.status(500).json({
       ok: false,
       error: "Error al obtener productos",
     });
@@ -111,7 +118,7 @@ async function resumenAdmin(req, res) {
       WHERE stock <= 3 AND estado = 1
     `);
 
-    res.json({
+    return res.json({
       ok: true,
       resumen: {
         totalProductos: productosTotalRows.total_productos,
@@ -122,7 +129,8 @@ async function resumenAdmin(req, res) {
     });
   } catch (error) {
     console.error("ERROR RESUMEN ADMIN >>>", error);
-    res.status(500).json({
+
+    return res.status(500).json({
       ok: false,
       error: "Error al obtener resumen del panel admin",
     });
@@ -131,17 +139,18 @@ async function resumenAdmin(req, res) {
 
 async function inactivarProducto(req, res) {
   try {
-    const { id } = req.params;
+    const idProducto = obtenerIdValido(req.params.id);
 
-    if (!idValido(id)) {
-      return res
-        .status(400)
-        .json({ ok: false, error: "ID de producto no válido" });
+    if (!idProducto) {
+      return res.status(400).json({
+        ok: false,
+        error: "ID de producto no válido",
+      });
     }
 
     const [result] = await pool.query(
       "UPDATE productos SET estado = 0 WHERE id_producto = ?",
-      [Number(id)],
+      [idProducto],
     );
 
     if (result.affectedRows === 0) {
@@ -151,13 +160,14 @@ async function inactivarProducto(req, res) {
       });
     }
 
-    res.json({
+    return res.json({
       ok: true,
       mensaje: "Producto inactivado correctamente",
     });
   } catch (error) {
     console.error("Error al inactivar producto: ", error);
-    res.status(500).json({
+
+    return res.status(500).json({
       ok: false,
       error: "Error al inactivar el producto",
     });
@@ -166,25 +176,29 @@ async function inactivarProducto(req, res) {
 
 async function editarProducto(req, res) {
   try {
-    const { id } = req.params;
+    const idProducto = obtenerIdValido(req.params.id);
 
-    if (!idValido(id)) {
-      return res
-        .status(400)
-        .json({ ok: false, error: "ID de producto no válido" });
+    if (!idProducto) {
+      return res.status(400).json({
+        ok: false,
+        error: "ID de producto no válido",
+      });
     }
 
     const validacion = validarProductoAdmin(req.body);
 
     if (validacion.error) {
-      return res.status(400).json({ ok: false, error: validacion.error });
+      return res.status(400).json({
+        ok: false,
+        error: validacion.error,
+      });
     }
 
     const { nombre, marca, precio, stock, estado } = validacion.datos;
 
     const [result] = await pool.query(
       "UPDATE productos SET nombre = ?, marca = ?, precio = ?, stock = ?, estado = ? WHERE id_producto = ?",
-      [nombre, marca, precio, stock, estado, Number(id)],
+      [nombre, marca, precio, stock, estado, idProducto],
     );
 
     if (result.affectedRows === 0) {
@@ -194,13 +208,14 @@ async function editarProducto(req, res) {
       });
     }
 
-    res.json({
+    return res.json({
       ok: true,
       mensaje: "Producto editado correctamente",
     });
   } catch (error) {
     console.error("Error al editar el producto", error);
-    res.status(500).json({
+
+    return res.status(500).json({
       ok: false,
       error: "Error al editar el producto",
     });
@@ -211,20 +226,16 @@ async function obtenerUsuario(req, res) {
   try {
     const [rows] = await pool.query(
       `SELECT 
-      id_usuario,
-      nombre,
-      email,
-      rol,
-      estado,
-      ultimo_login,
-      creado_hace
+        id_usuario,
+        nombre,
+        email,
+        rol,
+        estado,
+        ultimo_login,
+        creado_hace
       FROM usuarios
       ORDER BY id_usuario DESC`,
     );
-
-    if (rows.length === 0) {
-      return res.json({ ok: true, usuarios: [] });
-    }
 
     const usuarios = rows.map((usuario) => ({
       id: usuario.id_usuario,
@@ -235,38 +246,51 @@ async function obtenerUsuario(req, res) {
       creado_hace: usuario.creado_hace,
       estado: Number(usuario.estado),
     }));
-    res.json({ ok: true, usuarios });
+
+    return res.json({ ok: true, usuarios });
   } catch (error) {
-    res.status(500).json({ ok: false, error: "Error al obtener usuarios" });
+    console.error("Error al obtener usuarios >>>", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: "Error al obtener usuarios",
+    });
   }
 }
 
 async function agregarUsuario(req, res) {
   try {
-    const { nombre, email, password, rol } = req.body;
+    const { password, rol } = req.body;
 
-    const nombreLimpio = nombre?.trim();
-    const emailLimpio = email?.trim().toLowerCase();
+    const nombreLimpio = normalizarTexto(req.body.nombre);
+    const emailLimpio = normalizarEmail(req.body.email);
 
     if (!nombreLimpio || !emailLimpio || !password || !rol) {
-      return res
-        .status(400)
-        .json({ ok: false, error: "Faltan campos requeridos" });
+      return res.status(400).json({
+        ok: false,
+        error: "Faltan campos requeridos",
+      });
     }
 
     if (!emailValido(emailLimpio)) {
-      return res.status(400).json({ ok: false, error: "Email no válido" });
+      return res.status(400).json({
+        ok: false,
+        error: "Email no válido",
+      });
     }
 
-    if (password.length < 8) {
+    if (!passwordValida(password)) {
       return res.status(400).json({
         ok: false,
         error: "La contraseña debe tener al menos 8 caracteres",
       });
     }
 
-    if (!ROLES_PERMITIDOS.includes(rol)) {
-      return res.status(400).json({ ok: false, error: "Rol no permitido" });
+    if (!valorPermitido(rol, ROLES_PERMITIDOS)) {
+      return res.status(400).json({
+        ok: false,
+        error: "Rol no permitido",
+      });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
@@ -277,62 +301,80 @@ async function agregarUsuario(req, res) {
     );
 
     if (result.affectedRows === 0) {
-      return res
-        .status(500)
-        .json({ ok: false, error: "No se pudo agregar el usuario" });
+      return res.status(500).json({
+        ok: false,
+        error: "No se pudo agregar el usuario",
+      });
     }
 
-    res.json({ ok: true, mensaje: "Usuario agregado correctamente" });
+    return res.json({
+      ok: true,
+      mensaje: "Usuario agregado correctamente",
+    });
   } catch (error) {
     if (error.code === "ER_DUP_ENTRY") {
-      return res
-        .status(400)
-        .json({ ok: false, error: "El email ya está registrado" });
+      return res.status(400).json({
+        ok: false,
+        error: "El email ya está registrado",
+      });
     }
+
     console.error("Error al agregar usuario", error);
-    res.status(500).json({ ok: false, error: "Error al agregar usuario" });
+
+    return res.status(500).json({
+      ok: false,
+      error: "Error al agregar usuario",
+    });
   }
 }
 
 async function editarUsuario(req, res) {
   try {
-    const { id } = req.params;
-    const { nombre, email, rol, estado } = req.body;
+    const idUsuario = obtenerIdValido(req.params.id);
+    const { rol, estado } = req.body;
 
-    if (!idValido(id)) {
-      return res
-        .status(400)
-        .json({ ok: false, error: "ID de usuario no válido" });
+    const nombreLimpio = normalizarTexto(req.body.nombre);
+    const emailLimpio = normalizarEmail(req.body.email);
+    const estadoNumero = obtenerEstadoValido(estado);
+
+    if (!idUsuario) {
+      return res.status(400).json({
+        ok: false,
+        error: "ID de usuario no válido",
+      });
     }
 
-    const nombreLimpio = nombre?.trim();
-    const emailLimpio = email?.trim().toLowerCase();
-    const estadoNumero = Number(estado);
-
     if (!nombreLimpio || !emailLimpio || !rol || estado === undefined) {
-      return res
-        .status(400)
-        .json({ ok: false, error: "Faltan campos requeridos" });
+      return res.status(400).json({
+        ok: false,
+        error: "Faltan campos requeridos",
+      });
     }
 
     if (!emailValido(emailLimpio)) {
-      return res.status(400).json({ ok: false, error: "Email no válido" });
+      return res.status(400).json({
+        ok: false,
+        error: "Email no válido",
+      });
     }
 
-    if (![0, 1].includes(estadoNumero)) {
+    if (estadoNumero === null) {
       return res.status(400).json({
         ok: false,
         error: "Estado no válido, debe ser 0 o 1",
       });
     }
 
-    if (!ROLES_PERMITIDOS.includes(rol)) {
-      return res.status(400).json({ ok: false, error: "Rol no permitido" });
+    if (!valorPermitido(rol, ROLES_PERMITIDOS)) {
+      return res.status(400).json({
+        ok: false,
+        error: "Rol no permitido",
+      });
     }
 
     const [result] = await pool.query(
       "UPDATE usuarios SET nombre = ?, email = ?, rol = ?, estado = ? WHERE id_usuario = ?",
-      [nombreLimpio, emailLimpio, rol, estadoNumero, Number(id)],
+      [nombreLimpio, emailLimpio, rol, estadoNumero, idUsuario],
     );
 
     if (result.affectedRows === 0) {
@@ -342,13 +384,14 @@ async function editarUsuario(req, res) {
       });
     }
 
-    res.json({
+    return res.json({
       ok: true,
       mensaje: "Usuario editado correctamente",
     });
   } catch (error) {
     console.error("Error al editar el usuario", error);
-    res.status(500).json({
+
+    return res.status(500).json({
       ok: false,
       error: "Error al editar el usuario",
     });
@@ -357,17 +400,18 @@ async function editarUsuario(req, res) {
 
 async function eliminarUsuario(req, res) {
   try {
-    const { id } = req.params;
+    const idUsuario = obtenerIdValido(req.params.id);
 
-    if (!idValido(id)) {
-      return res
-        .status(400)
-        .json({ ok: false, error: "ID de usuario no válido" });
+    if (!idUsuario) {
+      return res.status(400).json({
+        ok: false,
+        error: "ID de usuario no válido",
+      });
     }
 
     const [result] = await pool.query(
       "UPDATE usuarios SET estado = 0 WHERE id_usuario = ?",
-      [Number(id)],
+      [idUsuario],
     );
 
     if (result.affectedRows === 0) {
@@ -376,13 +420,15 @@ async function eliminarUsuario(req, res) {
         error: "Usuario a eliminar no encontrado",
       });
     }
-    res.json({
+
+    return res.json({
       ok: true,
       mensaje: "Usuario eliminado correctamente",
     });
   } catch (error) {
     console.error("Error al eliminar el usuario", error);
-    res.status(500).json({
+
+    return res.status(500).json({
       ok: false,
       error: "Error al eliminar el usuario",
     });

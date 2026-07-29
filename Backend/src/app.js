@@ -13,6 +13,7 @@ const authRoutes = require("./routes/auth.routes");
 const tiendaRoutes = require("./routes/tienda.routes");
 const adminRoutes = require("./routes/admin.routes");
 const carritoRoutes = require("./routes/carrito.routes");
+const cuentaConfigRoutes = require("./routes/cuenta-config.routes");
 
 const pool = require("./config/db");
 
@@ -64,5 +65,5 @@ app.use("/api", authRoutes);
 app.use("/api/tienda", tiendaRoutes);
 app.use("/api/admin", adminRoutes(authMiddleware, adminMiddleware));
 app.use("/api/carrito", carritoRoutes(authMiddleware));
-
+app.use("/api/cuenta-config", cuentaConfigRoutes(authMiddleware));
 module.exports = app;

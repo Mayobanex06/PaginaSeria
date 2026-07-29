@@ -40,17 +40,6 @@ export function crearUIPerfil(dataPerfil){
       </label>
 
       <label class="campo">
-        <span class="campo-label">Teléfono</span>
-        <input
-          id="input-telefono"
-          type="tel"
-          class="campo-input"
-          placeholder="829-000-0000"
-          value="${escaparHTML(dataPerfil.telefono)}"
-        />
-      </label>
-
-      <label class="campo">
         <span class="campo-label">Rol</span>
         <input
           id="input-rol"
@@ -62,7 +51,18 @@ export function crearUIPerfil(dataPerfil){
         />
       </label>
 
-    </div>`;
+    </div>
+    
+    <div class="configuracion-acciones">
+    <button
+        id="btn-guardar-perfil"
+        class="btn-config-principal"
+        type="submit"
+    >
+        Guardar cambios
+    </button>
+  </form>
+</div>`;
 }
 
 export function renderizarPerfil(contenedor, data){

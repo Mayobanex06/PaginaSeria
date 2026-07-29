@@ -2,24 +2,24 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const pool = require("../config/db");
 
+const {
+  normalizarTexto,
+  normalizarEmail,
+  emailValido,
+  passwordValida,
+  obtenerIdValido,
+} = require("../utils/validators");
+
 const COOKIE_NAME = "sid";
 const SALT_ROUNDS = 10;
 const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
-
-function emailValido(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function validarPassword(password) {
-  return typeof password === "string" && password.length >= 8;
-}
 
 async function register(req, res) {
   try {
     const { nombre, email, password } = req.body;
 
-    const nombreLimpio = nombre?.trim();
-    const emailLimpio = email?.trim().toLowerCase();
+    const nombreLimpio = normalizarTexto(nombre);
+    const emailLimpio = normalizarEmail(email);
 
     if (!nombreLimpio || !emailLimpio || !password) {
       return res.status(400).json({
@@ -42,7 +42,7 @@ async function register(req, res) {
       });
     }
 
-    if (!validarPassword(password)) {
+    if (!passwordValida(password)) {
       return res.status(400).json({
         ok: false,
         error: "La contraseña debe tener al menos 8 caracteres",
@@ -92,102 +92,121 @@ async function register(req, res) {
 }
 
 async function login(req, res) {
-    try {
-      const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-      const emailLimpio = email?.trim().toLowerCase();
+    const emailLimpio = normalizarEmail(email);
 
-      if (!emailLimpio || !password) {
-        return res.status(400).json({
-          ok: false,
-          error: "Faltan datos",
-        });
-      }
-
-      if (!emailValido(emailLimpio)) {
-        return res.status(401).json({
-          ok: false,
-          error: "Credenciales inválidas",
-        });
-      }
-
-      const [rows] = await pool.query(
-        "SELECT * FROM usuarios WHERE email = ?",
-        [emailLimpio],
-      );
-
-      if (rows.length === 0) {
-        return res.status(401).json({
-          ok: false,
-          error: "Credenciales inválidas",
-        });
-      }
-
-      const user = rows[0];
-
-      const passwordMatch = await bcrypt.compare(password, user.password);
-
-      if (!passwordMatch) {
-        return res.status(401).json({
-          ok: false,
-          error: "Credenciales inválidas",
-        });
-      }
-
-      if (Number(user.estado) !== 1) {
-        return res.status(403).json({
-          ok: false,
-          error: "Usuario inactivo",
-        });
-      }
-
-      const sid = crypto.randomBytes(24).toString("hex");
-      const expiraEn = new Date(Date.now() + SESSION_DURATION_MS);
-
-      await pool.query(
-        "INSERT INTO sesiones (id_sesion, usuario_id, expira_en) VALUES (?, ?, ?)",
-        [sid, user.id_usuario, expiraEn],
-      );
-
-      await pool.query(
-        "UPDATE usuarios SET ultimo_login = NOW() WHERE id_usuario = ?",
-        [user.id_usuario],
-      );
-
-      res.cookie(COOKIE_NAME, sid, {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-        maxAge: SESSION_DURATION_MS,
-        path: "/",
-      });
-
-      return res.json({ ok: true });
-    } catch (err) {
-      console.error("LOGIN ERROR >>>", err);
-      return res.status(500).json({
+    if (!emailLimpio || !password) {
+      return res.status(400).json({
         ok: false,
-        error: "Error interno del servidor",
+        error: "Faltan datos",
       });
     }
+
+    if (!emailValido(emailLimpio)) {
+      return res.status(401).json({
+        ok: false,
+        error: "Credenciales inválidas",
+      });
+    }
+
+    const [rows] = await pool.query(
+      "SELECT * FROM usuarios WHERE email = ?",
+      [emailLimpio],
+    );
+
+    if (rows.length === 0) {
+      return res.status(401).json({
+        ok: false,
+        error: "Credenciales inválidas",
+      });
+    }
+
+    const user = rows[0];
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return res.status(401).json({
+        ok: false,
+        error: "Credenciales inválidas",
+      });
+    }
+
+    if (Number(user.estado) !== 1) {
+      return res.status(403).json({
+        ok: false,
+        error: "Usuario inactivo",
+      });
+    }
+
+    const sid = crypto.randomBytes(24).toString("hex");
+    const expiraEn = new Date(Date.now() + SESSION_DURATION_MS);
+
+    await pool.query(
+      "INSERT INTO sesiones (id_sesion, usuario_id, expira_en) VALUES (?, ?, ?)",
+      [sid, user.id_usuario, expiraEn],
+    );
+
+    await pool.query(
+      "UPDATE usuarios SET ultimo_login = NOW() WHERE id_usuario = ?",
+      [user.id_usuario],
+    );
+
+    res.cookie(COOKIE_NAME, sid, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: SESSION_DURATION_MS,
+      path: "/",
+    });
+
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error("LOGIN ERROR >>>", err);
+
+    return res.status(500).json({
+      ok: false,
+      error: "Error interno del servidor",
+    });
+  }
 }
 
 async function me(req, res) {
   try {
+    const userId = obtenerIdValido(req.userId);
+
+    if (!userId) {
+      return res.status(401).json({
+        ok: false,
+        error: "No autenticado",
+      });
+    }
+
     const [rows] = await pool.query(
       "SELECT id_usuario, nombre, email, rol, estado, ultimo_login FROM usuarios WHERE id_usuario = ?",
-      [req.userId],
+      [userId],
     );
 
     if (rows.length === 0) {
-      return res
-        .status(404)
-        .json({ ok: false, error: "Usuario no encontrado" });
+      return res.status(404).json({
+        ok: false,
+        error: "Usuario no encontrado",
+      });
     }
 
-    res.json({ ok: true, user: rows[0] });
+    return res.json({
+      ok: true,
+      user: rows[0],
+    });
   } catch (error) {
-    res.status(500).json({ ok: false, error: "Error interno del servidor" });
+    console.error("ME ERROR >>>", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: "Error interno del servidor",
+    });
   }
 }
 
